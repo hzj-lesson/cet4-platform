@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大学英语四级（CET-4）备考学习平台</title>
+<meta name="description" content="大学英语四级（CET-4）备考学习平台：四阶段逐日计划打卡、核心能力速记、在线刷题、听力阅读写作翻译专项与备考方法。">
+<style>
+:root{
+  --bg:#f5f6fd; --card:#ffffff; --fg:#1a1c2e; --muted:#6b7280; --border:#e6e8f2;
+  --primary:#4f46e5; --primary-2:#0ea5c6; --primary-fg:#ffffff;
+  --ok:#16a34a; --warn:#d97706; --soft:#eef0fd;
+  --radius:16px; --shadow:0 2px 12px rgba(79,70,229,.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;background:var(--bg);color:var(--fg);line-height:1.7}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 64px}
+/* hero */
+.hero{background:linear-gradient(135deg,#312e81 0%,#4f46e5 46%,#0e9fae 100%);color:#fff;padding:44px 16px 88px;text-align:center;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 82% 18%,rgba(14,165,198,.45),transparent 42%),radial-gradient(circle at 12% 85%,rgba(79,70,229,.4),transparent 40%);pointer-events:none}
+.hero h1{font-size:26px;font-weight:800;letter-spacing:1px;position:relative;z-index:1}
+.hero .sub{margin-top:8px;font-size:14px;opacity:.88;position:relative;z-index:1}
+.badges{margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+.badge{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);padding:4px 12px;border-radius:99px;font-size:12.5px}
+.countdown-card{max-width:720px;margin:-52px auto 0;background:var(--card);border-radius:var(--radius);box-shadow:0 8px 28px rgba(49,46,129,.18);padding:22px 24px;position:relative;z-index:2;display:flex;align-items:center;justify-content:space-around;gap:8px;flex-wrap:wrap}
+.cd-item{text-align:center;min-width:64px}
+.cd-num{font-size:34px;font-weight:800;color:var(--primary);font-variant-numeric:tabular-nums}
+.cd-label{font-size:12px;color:var(--muted)}
+.cd-sep{font-size:26px;color:var(--border);font-weight:700;padding-bottom:14px}
+.cd-title{width:100%;font-size:13px;color:var(--muted);text-align:center;margin-top:6px}
+/* tabs */
+.tabs{display:flex;gap:6px;margin:26px 0 20px;background:var(--card);padding:6px;border-radius:14px;box-shadow:var(--shadow);position:sticky;top:8px;z-index:50;overflow-x:auto}
+.tab{flex:1;min-width:max-content;text-align:center;padding:9px 14px;border-radius:10px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;border:none;background:transparent;transition:.18s;white-space:nowrap}
+.tab.on{background:var(--primary);color:#fff;box-shadow:0 3px 10px rgba(79,70,229,.32)}
+.panel{display:none;animation:fade .25s}
+.panel.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+h2.sec{font-size:19px;font-weight:800;margin:26px 0 12px;display:flex;align-items:center;gap:8px}
+h2.sec::before{content:"";width:4px;height:20px;border-radius:2px;background:linear-gradient(180deg,var(--primary),var(--primary-2));display:inline-block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;margin-bottom:14px}
+/* tables */
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th{background:var(--soft);color:var(--primary);font-weight:700;padding:9px 10px;text-align:left;white-space:nowrap}
+.tbl td{padding:9px 10px;border-top:1px solid var(--border);vertical-align:top}
+.tbl tr:nth-child(even) td{background:#fafbff}
+.scrolly{overflow-x:auto}
+/* stage */
+.stage-head{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;user-select:none}
+.stage-title{font-size:16px;font-weight:800}
+.stage-title small{display:block;font-weight:500;font-size:12.5px;color:var(--muted);margin-top:2px}
+.stage-prog{font-size:12.5px;color:var(--primary);font-weight:700;background:var(--soft);padding:4px 12px;border-radius:99px;white-space:nowrap}
+.days{display:none;margin-top:14px}
+.days.open{display:block}
+.day{display:flex;gap:12px;align-items:flex-start;padding:11px 12px;border-radius:12px;border:1px solid transparent;transition:.15s}
+.day:hover{background:var(--soft)}
+.day.today{background:#fff8ed;border-color:#f5c98a}
+.day.done{opacity:.62}
+.day .chk{margin-top:5px;width:20px;height:20px;flex:none;accent-color:var(--ok);cursor:pointer}
+.day .date{font-size:12.5px;color:var(--muted);min-width:76px;flex:none;font-weight:600;padding-top:2px}
+.day .date b{display:block;font-size:14px;color:var(--fg)}
+.day .body{flex:1}
+.day .task{font-size:14px}
+.day .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--primary);background:var(--soft);border-radius:6px;padding:1px 7px;margin-bottom:3px}
+.day .tag.tag-link{cursor:pointer;transition:.15s}
+.day .tag.tag-link::after{content:" ↗";font-size:10px}
+.day .tag.tag-link:hover{background:var(--primary);color:#fff}
+.day.today .tag{background:#fdeacc;color:#b45309}
+.today-mark{font-size:11px;color:#b45309;font-weight:800;margin-left:6px}
+.rest-day{background:#f0fdf4;border:1px dashed #86efac;border-radius:12px;padding:12px 16px;font-size:13.5px;color:#166534;margin-top:10px}
+/* milestone */
+.miles{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+.mile{flex:none;width:200px;background:linear-gradient(135deg,#312e81,#0e9fae);color:#fff;border-radius:14px;padding:14px 16px}
+.mile .d{font-size:12px;opacity:.8}
+.mile .t{font-size:15px;font-weight:800;margin-top:4px}
+.mile .s{font-size:12px;opacity:.85;margin-top:4px}
+/* knowledge accordion */
+.kb{border:1px solid var(--border);border-radius:14px;background:var(--card);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow)}
+.kb-head{padding:14px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.kb-head:hover{background:var(--soft)}
+.kb-head .arrow{margin-left:auto;color:var(--muted);transition:.2s;font-size:13px}
+.kb.open .arrow{transform:rotate(90deg)}
+.kb-title{font-weight:800;font-size:15px}
+.kb-chip{font-size:11px;font-weight:700;border-radius:6px;padding:1px 8px}
+.chip-master{background:#dcfce7;color:#15803d}
+.chip-familiar{background:#dbeafe;color:#1d4ed8}
+.chip-know{background:#f1f5f9;color:#64748b}
+.kb-body{display:none;padding:0 18px 16px;font-size:13.8px}
+.kb.open .kb-body{display:block}
+.kb-body .row{display:flex;gap:10px;margin-top:10px}
+.kb-body .k{flex:none;width:72px;font-weight:700;color:var(--primary);font-size:12.5px;padding-top:2px}
+.kb-body .v{flex:1}
+.kb-body .excel{background:var(--soft);border-radius:10px;padding:10px 12px}
+.kb-body .tip{background:#fff8ed;border-radius:10px;padding:10px 12px;color:#92400e}
+/* checklist */
+.ck{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:12px}
+.ck:hover{background:var(--soft)}
+.ck .chk{margin-top:4px;width:20px;height:20px;flex:none;accent-color:var(--ok);cursor:pointer}
+.ck .q{font-size:14.2px}
+.ck.done .q{text-decoration:line-through;color:var(--muted)}
+.progbar{height:10px;background:#e6edf7;border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.progbar i{display:block;height:100%;background:linear-gradient(90deg,var(--primary),var(--primary-2));border-radius:99px;transition:width .3s;width:0}
+.prog-txt{font-size:12.5px;color:var(--muted)}
+/* tips */
+.tip-card{display:flex;gap:12px;margin-bottom:12px}
+.tip-card .ico{flex:none;width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px}
+.tip-card b{font-size:14.5px}
+.tip-card p{font-size:13.5px;color:var(--muted);margin-top:2px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 16px 40px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:#1a1c2e;color:#fff;padding:9px 20px;border-radius:99px;font-size:13px;opacity:0;transition:.25s;z-index:99;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.qz-opt{border:1.5px solid var(--border);border-radius:12px;padding:11px 14px;margin-bottom:8px;font-size:14px;cursor:pointer;transition:.15s;background:var(--card)}
+.qz-opt:hover{border-color:var(--primary);background:var(--soft)}
+.qz-opt b{color:var(--primary);margin-right:4px}
+.qz-opt.correct{border-color:var(--ok);background:#f0fdf4;color:#15803d;font-weight:600}
+.qz-opt.wrong{border-color:#dc2626;background:#fef2f2;color:#b91c1c}
+.qz-ex{margin-top:12px;background:var(--soft);border-radius:12px;padding:12px 14px;font-size:13.5px;line-height:1.8}
+.qz-ex b{color:var(--primary)}
+.chip-book{background:#fef3c7;color:#92400e}
+.chip-book2{background:#ede9fe;color:#6d28d9}
+.chip-book3{background:#dcfce7;color:#15803d}
+@media (max-width:560px){
+  .hero h1{font-size:20px}
+  .cd-num{font-size:26px}
+  .day .date{min-width:64px}
+  .countdown-card{padding:16px 12px}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>大学英语四级（CET-4）· 备考学习平台</h1>
+  <div class="sub">科学四阶段 · 每天 1.5—2 小时 · 听力 + 阅读 + 写作 + 翻译 全题型突破</div>
+  <div class="badges">
+    <span class="badge">🎯 考试日 2026-12-19（周六）</span>
+    <span class="badge">📅 四阶段逐日计划 · 打卡留存</span>
+    <span class="badge">💾 进度自动保存在本机</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="countdown-card">
+    <div class="cd-item"><div class="cd-num" id="cdD">--</div><div class="cd-label">天</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-item"><div class="cd-num" id="cdH">--</div><div class="cd-label">时</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-item"><div class="cd-num" id="cdM">--</div><div class="cd-label">分</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-item"><div class="cd-num" id="cdS">--</div><div class="cd-label">秒</div></div>
+    <div class="cd-title">距离 2026 年 12 月 19 日 CET-4 考试还有</div>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-p="p1">📊 备考总览</button>
+    <button class="tab" data-p="p2">🗓️ 逐日计划</button>
+    <button class="tab" data-p="p3">📚 知识点</button>
+    <button class="tab" data-p="p7">🎯 在线刷题</button>
+    <button class="tab" data-p="p5">💡 备考方法</button>
+    <button class="tab" data-p="p6">📚 资源中心</button>
+  </div>
+
+  <!-- ============ P1 总览 ============ -->
+  <div class="panel on" id="p1">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <b style="font-size:15.5px">📈 我的备考总进度</b>
+        <span class="prog-txt" id="allTxt">已完成 0 / 0 项</span>
+      </div>
+      <div class="progbar" style="margin-top:12px"><i id="allBar"></i></div>
+      <div class="prog-txt" id="allPct">0%</div>
+    </div>
+
+    <h2 class="sec">考试基本信息</h2>
+    <div class="card scrolly">
+      <table class="tbl">
+        <tr><th style="width:110px">项目</th><th>内容</th></tr>
+        <tr><td>考试名称</td><td>全国大学英语四级考试（CET-4）</td></tr>
+        <tr><td>主办单位</td><td>教育部教育考试院（NEEA）</td></tr>
+        <tr><td>考试时间</td><td>2026 年 12 月 19 日（第三个周六）上午 09:00—11:20</td></tr>
+        <tr><td>考试形式</td><td>笔试（含听力），满分 710 分；425 分及以上可获得成绩单（多数院校以此为通过线）</td></tr>
+        <tr><td>成绩构成</td><td>写作 15% ＋ 听力 35% ＋ 阅读 35% ＋ 翻译 15%</td></tr>
+        <tr><td>报名方式</td><td>学校统一组织报名，官网打印准考证、查询成绩</td></tr>
+      </table>
+    </div>
+
+    <h2 class="sec">四大题型与分值结构</h2>
+    <div class="card">
+      <div class="scrolly"><table class="tbl">
+        <tr><th>题型</th><th>题量/时长</th><th>分值</th><th>核心能力</th></tr>
+        <tr><td>写作</td><td>1 篇 / 30 分钟</td><td>106.5 分（15%）</td><td>三段式短文、审题、衔接与语法</td></tr>
+        <tr><td>听力</td><td>25 题 / 25 分钟</td><td>248.5 分（35%）</td><td>短篇新闻 7 题、长对话 8 题、听力篇章 10 题</td></tr>
+        <tr><td>阅读</td><td>30 题 / 40 分钟</td><td>248.5 分（35%）</td><td>选词填空 10、段落匹配 10、仔细阅读 10</td></tr>
+        <tr><td>翻译</td><td>1 段 / 30 分钟</td><td>106.5 分（15%）</td><td>汉译英（中国文化/社会发展类段落）</td></tr>
+      </table></div>
+    </div>
+
+    <h2 class="sec">四阶段备考路线</h2>
+    <div class="card scrolly">
+      <table class="tbl">
+        <tr><th>阶段</th><th>日期</th><th>天数</th><th>核心目标</th></tr>
+        <tr><td>一：基础夯实</td><td>9 月 6 日—9 月 27 日</td><td>22 天</td><td>高频词汇积累 + 语法体系重建</td></tr>
+        <tr><td>二：专项突破</td><td>9 月 28 日—11 月 8 日</td><td>42 天</td><td>听力三板块 + 阅读三板块 + 写作 + 翻译分项训练</td></tr>
+        <tr><td>三：刷题强化</td><td>11 月 9 日—12 月 6 日</td><td>28 天</td><td>真题套卷 + 错题回炉 + 弱项专训</td></tr>
+        <tr><td>四：考前冲刺</td><td>12 月 7 日—12 月 18 日</td><td>12 天</td><td>全真模拟 + 时间分配 + 心态与物品准备</td></tr>
+      </table>
+    </div>
+
+    <h2 class="sec">关键时间节点</h2>
+    <div class="miles">
+      <div class="mile"><div class="d">约 9 月—10 月</div><div class="t">学校报名</div><div class="s">关注本校教务处通知，在规定窗口完成报名缴费</div></div>
+      <div class="mile"><div class="d">考前约 2 周</div><div class="t">打印准考证</div><div class="s">登录 NEEA 官网下载打印，核对考试时间地点</div></div>
+      <div class="mile"><div class="d">2026-12-19 09:00</div><div class="t">正式考试</div><div class="s">带齐准考证、身份证、耳机（听力）；沉着应考 🏆</div></div>
+      <div class="mile"><div class="d">考后约 2 月</div><div class="t">查分</div><div class="s">NEEA 官网查询 710 分制成绩，≥425 视为通过</div></div>
+    </div>
+  </div>
+
+  <!-- ============ P2 逐日计划 ============ -->
+  <div class="panel" id="p2">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <b style="font-size:15.5px">🗓️ 计划完成进度</b>
+        <span class="prog-txt" id="planTxt">0 / 0 天</span>
+      </div>
+      <div class="progbar" style="margin-top:12px"><i id="planBar"></i></div>
+      <div class="prog-txt">每天投入 1.5—2 小时；勾选即打卡，进度自动保存在本机浏览器。若进度落后，优先在周末补上。<b style="color:var(--primary)">点击每天的彩色标签，可直达对应知识点＋本模块刷题 →</b></div>
+    </div>
+    <div id="planBox"></div>
+  </div>
+
+  <!-- ============ P3 知识点 ============ -->
+  <div class="panel" id="p3">
+    <h2 class="sec">必背速记 · 10 模块（题库版）</h2>
+    <div id="kbBank"></div>
+    <h2 class="sec">核心能力 · 6 大板块</h2>
+    <div id="kbS1"></div>
+  </div>
+
+  <!-- ============ P7 在线刷题 ============ -->
+  <div class="panel" id="p7">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <b style="font-size:15.5px">🎯 刷题进度</b>
+        <span class="prog-txt" id="qzStat">--</span>
+      </div>
+      <div class="progbar" style="margin-top:12px"><i id="qzBar"></i></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px" id="qzChips"></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+        <button class="tab" id="qzModeAll" style="background:var(--primary);color:#fff">全部题</button>
+        <button class="tab" id="qzModeWrong" style="background:var(--soft);color:var(--primary)">🔁 只刷错题</button>
+        <button class="tab" id="qzModeBook" style="background:var(--soft);color:#92400e">📚 平台题库</button>
+        <button class="tab" id="qzModeReal" style="background:var(--soft);color:#b91c1c">🎯 真题</button>
+        <button class="tab" id="qzReset" style="background:var(--soft);color:var(--muted)">🗑️ 重置记录</button>
+      </div>
+    </div>
+    <div id="qzCard"></div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:4px">
+      <button class="tab" id="qzPrev" style="background:var(--card);color:var(--primary);border:1px solid var(--border)">← 上一题</button>
+      <button class="tab" id="qzNext" style="background:var(--primary);color:#fff">下一题 →</button>
+    </div>
+  </div>
+
+  <!-- ============ P5 备考方法 ============ -->
+  <div class="panel" id="p5">
+    <div id="tipsBox"></div>
+    <div class="card" style="background:linear-gradient(135deg,#312e81,#0e9fae);color:#fff;border:none">
+      <b style="font-size:15.5px">🏅 冲刺目标</b>
+      <p style="font-size:13.5px;opacity:.92;margin-top:6px">稳过 425 分是基础目标；想冲高分，重点在<b>听力与阅读（合计 70%）</b>——这两块靠每日精听与精读可稳定提分。写作翻译靠模板与高频词突击可在短期明显见效。平时练习严格计时，把「听得懂、读得准、写得顺、译得对」变成肌肉记忆。</p>
+    </div>
+  </div>
+
+  <!-- ============ P6 资源中心 ============ -->
+  <div class="panel" id="p6">
+    <h2 class="sec">备考资源包</h2>
+    <div id="resBox"></div>
+
+    <h2 class="sec">各题型解题步骤</h2>
+    <div class="card" style="background:var(--soft);font-size:13.8px;line-height:2.1">
+      <b>🎧 听力</b>：发卷先扫读选项→圈名词/动词预测→听时抓首尾句与信号词（but / however / because）→边听边涂卡（听力结束即收卡，无单独涂卡时间）。<br>
+      <b>📖 阅读·选词填空</b>：先判词性→再判语法空位（n./v./adj./adv.）→代入排除→注意固定搭配。<br>
+      <b>📖 阅读·段落匹配</b>：先看题干划关键词（专有名词/数字/长词）→原文扫读定位同义替换→先易后难。<br>
+      <b>📖 阅读·仔细阅读</b>：先读题干不读选项→回原文定位句→对比选项找同义改写（答案多在定位句附近）。<br>
+      <b>✍️ 写作</b>：审题定体裁→三段式（现象/观点＋论证＋总结）→用 3—5 个高级衔接词与 1—2 个从句→留 3 分钟检查语法。<br>
+      <b>🌐 翻译</b>：通读理清主干（主谓宾）→处理修饰（定从/分词/介词短语）→不会的词用简单词解释绕开→检查时态与单复数。
+    </div>
+
+    <h2 class="sec">推荐练习顺序</h2>
+    <div class="card">
+      <div style="font-size:13.8px;line-height:2.1">
+        <b>①</b> 先读「<b>知识点</b>」页：背熟 <b>核心能力 6 板块</b>＋各模块<b>必背速记</b>（性价比最高）<br>
+        <b>②</b> 在「<b>在线刷题</b>」按模块刷完平台题库，错题本反复回炉（点「📚 平台题库」可单独筛选）<br>
+        <b>③</b> 下载<b>高频核心词汇表</b>，每天背 30—50 词并复习前日<br>
+        <b>④</b> 阶段三起每周做 1—2 套<b>真题/模拟套卷</b>，严格计时<br>
+        <b>⑤</b> 考前 2 周进入「全真模拟」节奏，固定上午 09:00 开考
+      </div>
+    </div>
+
+    <h2 class="sec">官方入口</h2>
+    <div class="card" id="linksBox"></div>
+  </div>
+
+</div>
+
+<footer>
+  大学英语四级（CET-4）· 备考学习平台 ｜ 内容依据考试大纲与主流备考体系编制（2026-09-06）<br>
+  所有打卡与刷题记录仅保存在你的浏览器本机（localStorage），不会上传任何服务器
+</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= 数据（由 build_cet4.py 注入） ================= */
+var STAGES=[{"name": "阶段一 · 基础夯实", "range": "9 月 6 日 — 9 月 27 日 · 词汇积累＋语法体系", "days": [["2026-09-06", "9月6日", "日", "复习", "周复盘：滚动复习本周生词本；重做本周语法错题；听 1 篇轻松材料保持语感"], ["2026-09-07", "9月7日", "一", "词汇", "背 Unit 1 高频核心词 30 个＋熟词生义 5 个；用语境例句巩固；复习前日生词"], ["2026-09-08", "9月8日", "二", "语法", "语法专项：时态与语态梳理，做 10 道；整理非谓语/从句笔记，准备后续写作翻译运用"], ["2026-09-09", "9月9日", "三", "词汇", "背 Unit 2 高频核心词 30 个＋熟词生义 5 个；用语境例句巩固；复习前日生词"], ["2026-09-10", "9月10日", "四", "语法", "语法专项：时态与语态梳理，做 10 道；整理非谓语/从句笔记，准备后续写作翻译运用"], ["2026-09-11", "9月11日", "五", "词汇", "背 Unit 3 高频核心词 30 个＋熟词生义 5 个；用语境例句巩固；复习前日生词"], ["2026-09-12", "9月12日", "六", "语法", "语法专项：时态与语态梳理，做 10 道；整理非谓语/从句笔记，准备后续写作翻译运用"], ["2026-09-13", "9月13日", "日", "复习", "周复盘：滚动复习本周生词本；重做本周语法错题；听 1 篇轻松材料保持语感"], ["2026-09-14", "9月14日", "一", "词汇", "背 Unit 4 高频核心词 30 个＋熟词生义 5 个；用语境例句巩固；复习前日生词"], ["2026-09-15", "9月15日", "二", "语法", "语法专项：时态与语态梳理，做 10 道；整理非谓语/从句笔记，准备后续写作翻译运用"], ["2026-09-16", "9月16日", "三", "词汇", "背 Unit 5 高频核心词 30 个＋熟词生义 5 个；用语境例句巩固；复习前日生词"], ["2026-09-17", "9月17日", "四", "语法", "语法专项：时态与语态梳理，做 10 道；整理非谓语/从句笔记，准备后续写作翻译运用"], ["2026-09-18", "9月18日", "五", "词汇", "背 Unit 6 高频核心词 30 个＋熟词生义 5 个；用语境例句巩固；复习前日生词"], ["2026-09-19", "9月19日", "六", "语法", "语法专项：时态与语态梳理，做 10 道；整理非谓语/从句笔记，准备后续写作翻译运用"], ["2026-09-20", "9月20日", "日", "复习", "周复盘：滚动复习本周生词本；重做本周语法错题；听 1 篇轻松材料保持语感"], ["2026-09-21", "9月21日", "一", "词汇", "背 Unit 7 高频核心词 30 个＋熟词生义 5 个；用语境例句巩固；复习前日生词"], ["2026-09-22", "9月22日", "二", "语法", "语法专项：时态与语态梳理，做 10 道；整理非谓语/从句笔记，准备后续写作翻译运用"], ["2026-09-23", "9月23日", "三", "词汇", "背 Unit 8 高频核心词 30 个＋熟词生义 5 个；用语境例句巩固；复习前日生词"], ["2026-09-24", "9月24日", "四", "语法", "语法专项：时态与语态梳理，做 10 道；整理非谓语/从句笔记，准备后续写作翻译运用"], ["2026-09-25", "9月25日", "五", "词汇", "背 Unit 9 高频核心词 30 个＋熟词生义 5 个；用语境例句巩固；复习前日生词"], ["2026-09-26", "9月26日", "六", "语法", "语法专项：时态与语态梳理，做 10 道；整理非谓语/从句笔记，准备后续写作翻译运用"], ["2026-09-27", "9月27日", "日", "复习", "周复盘：滚动复习本周生词本；重做本周语法错题；听 1 篇轻松材料保持语感"]]}, {"name": "阶段二 · 专项突破", "range": "9 月 28 日 — 11 月 8 日 · 听力/阅读/写作/翻译分项训练", "days": [["2026-09-28", "9月28日", "一", "听力·新闻", "听力新闻：预读选项＋精听 3 篇（BBC/VOA 慢速），总结导语与数字捕捉（第 1 轮）"], ["2026-09-29", "9月29日", "二", "听力·对话", "听力长对话：精听 3 组，练『问答回答句』定位与态度判断（第 1 轮）"], ["2026-09-30", "9月30日", "三", "听力·篇章", "听力篇章：精听 2 篇，抓首句点题与结尾总结，记关键词（第 1 轮）"], ["2026-10-01", "10月1日", "四", "阅读·选词", "阅读选词填空：练 2 篇，先判词性再填，总结固定搭配（第 1 轮）"], ["2026-10-02", "10月2日", "五", "阅读·匹配", "阅读段落匹配：练 2 篇，先划题干关键词再扫读定位同义替换（第 1 轮）"], ["2026-10-03", "10月3日", "六", "阅读·仔细", "仔细阅读：精读 2 篇，定位句＋对比选项找同义改写，复盘替换对（第 1 轮）"], ["2026-10-04", "10月4日", "日", "复习", "周复盘：重做本周听力/阅读错题；听写 1 篇短文；整理写作模板与翻译词库"], ["2026-10-05", "10月5日", "一", "写作", "写作：背三段式模板 1 套；按真题提纲写 1 篇（现象/观点类），自查语法（第 1 轮）"], ["2026-10-06", "10月6日", "二", "翻译", "翻译：练 1 段汉译英（文化/社会类），先搭主干再挂修饰，积累文化专有词（第 1 轮）"], ["2026-10-07", "10月7日", "三", "听力·新闻", "听力新闻：预读选项＋精听 3 篇（BBC/VOA 慢速），总结导语与数字捕捉（第 2 轮）"], ["2026-10-08", "10月8日", "四", "听力·对话", "听力长对话：精听 3 组，练『问答回答句』定位与态度判断（第 2 轮）"], ["2026-10-09", "10月9日", "五", "听力·篇章", "听力篇章：精听 2 篇，抓首句点题与结尾总结，记关键词（第 2 轮）"], ["2026-10-10", "10月10日", "六", "阅读·选词", "阅读选词填空：练 2 篇，先判词性再填，总结固定搭配（第 2 轮）"], ["2026-10-11", "10月11日", "日", "复习", "周复盘：重做本周听力/阅读错题；听写 1 篇短文；整理写作模板与翻译词库"], ["2026-10-12", "10月12日", "一", "阅读·匹配", "阅读段落匹配：练 2 篇，先划题干关键词再扫读定位同义替换（第 2 轮）"], ["2026-10-13", "10月13日", "二", "阅读·仔细", "仔细阅读：精读 2 篇，定位句＋对比选项找同义改写，复盘替换对（第 2 轮）"], ["2026-10-14", "10月14日", "三", "写作", "写作：背三段式模板 1 套；按真题提纲写 1 篇（现象/观点类），自查语法（第 2 轮）"], ["2026-10-15", "10月15日", "四", "翻译", "翻译：练 1 段汉译英（文化/社会类），先搭主干再挂修饰，积累文化专有词（第 2 轮）"], ["2026-10-16", "10月16日", "五", "听力·新闻", "听力新闻：预读选项＋精听 3 篇（BBC/VOA 慢速），总结导语与数字捕捉（第 3 轮）"], ["2026-10-17", "10月17日", "六", "听力·对话", "听力长对话：精听 3 组，练『问答回答句』定位与态度判断（第 3 轮）"], ["2026-10-18", "10月18日", "日", "复习", "周复盘：重做本周听力/阅读错题；听写 1 篇短文；整理写作模板与翻译词库"], ["2026-10-19", "10月19日", "一", "听力·篇章", "听力篇章：精听 2 篇，抓首句点题与结尾总结，记关键词（第 3 轮）"], ["2026-10-20", "10月20日", "二", "阅读·选词", "阅读选词填空：练 2 篇，先判词性再填，总结固定搭配（第 3 轮）"], ["2026-10-21", "10月21日", "三", "阅读·匹配", "阅读段落匹配：练 2 篇，先划题干关键词再扫读定位同义替换（第 3 轮）"], ["2026-10-22", "10月22日", "四", "阅读·仔细", "仔细阅读：精读 2 篇，定位句＋对比选项找同义改写，复盘替换对（第 3 轮）"], ["2026-10-23", "10月23日", "五", "写作", "写作：背三段式模板 1 套；按真题提纲写 1 篇（现象/观点类），自查语法（第 3 轮）"], ["2026-10-24", "10月24日", "六", "翻译", "翻译：练 1 段汉译英（文化/社会类），先搭主干再挂修饰，积累文化专有词（第 3 轮）"], ["2026-10-25", "10月25日", "日", "复习", "周复盘：重做本周听力/阅读错题；听写 1 篇短文；整理写作模板与翻译词库"], ["2026-10-26", "10月26日", "一", "听力·新闻", "听力新闻：预读选项＋精听 3 篇（BBC/VOA 慢速），总结导语与数字捕捉（第 4 轮）"], ["2026-10-27", "10月27日", "二", "听力·对话", "听力长对话：精听 3 组，练『问答回答句』定位与态度判断（第 4 轮）"], ["2026-10-28", "10月28日", "三", "听力·篇章", "听力篇章：精听 2 篇，抓首句点题与结尾总结，记关键词（第 4 轮）"], ["2026-10-29", "10月29日", "四", "阅读·选词", "阅读选词填空：练 2 篇，先判词性再填，总结固定搭配（第 4 轮）"], ["2026-10-30", "10月30日", "五", "阅读·匹配", "阅读段落匹配：练 2 篇，先划题干关键词再扫读定位同义替换（第 4 轮）"], ["2026-10-31", "10月31日", "六", "阅读·仔细", "仔细阅读：精读 2 篇，定位句＋对比选项找同义改写，复盘替换对（第 4 轮）"], ["2026-11-01", "11月1日", "日", "复习", "周复盘：重做本周听力/阅读错题；听写 1 篇短文；整理写作模板与翻译词库"], ["2026-11-02", "11月2日", "一", "写作", "写作：背三段式模板 1 套；按真题提纲写 1 篇（现象/观点类），自查语法（第 4 轮）"], ["2026-11-03", "11月3日", "二", "翻译", "翻译：练 1 段汉译英（文化/社会类），先搭主干再挂修饰，积累文化专有词（第 4 轮）"], ["2026-11-04", "11月4日", "三", "听力·新闻", "听力新闻：预读选项＋精听 3 篇（BBC/VOA 慢速），总结导语与数字捕捉（第 5 轮）"], ["2026-11-05", "11月5日", "四", "听力·对话", "听力长对话：精听 3 组，练『问答回答句』定位与态度判断（第 5 轮）"], ["2026-11-06", "11月6日", "五", "听力·篇章", "听力篇章：精听 2 篇，抓首句点题与结尾总结，记关键词（第 5 轮）"], ["2026-11-07", "11月7日", "六", "阅读·选词", "阅读选词填空：练 2 篇，先判词性再填，总结固定搭配（第 5 轮）"], ["2026-11-08", "11月8日", "日", "复习", "周复盘：重做本周听力/阅读错题；听写 1 篇短文；整理写作模板与翻译词库"]]}, {"name": "阶段三 · 刷题强化", "range": "11 月 9 日 — 12 月 6 日 · 真题套卷＋错题回炉＋弱项专训", "days": [["2026-11-09", "11月9日", "一", "套卷", "真题/模拟套卷 1 套（按考试时间计时完成：写作30′/听力25′/阅读40′/翻译30′），当晚核对答案"], ["2026-11-10", "11月10日", "二", "综合", "弱项专训：针对上套卷失分最多的题型，集中练 15 题＋看解析；整理错因"], ["2026-11-11", "11月11日", "三", "套卷", "真题/模拟套卷 1 套（按考试时间计时完成：写作30′/听力25′/阅读40′/翻译30′），当晚核对答案"], ["2026-11-12", "11月12日", "四", "综合", "弱项专训：针对上套卷失分最多的题型，集中练 15 题＋看解析；整理错因"], ["2026-11-13", "11月13日", "五", "套卷", "真题/模拟套卷 1 套（按考试时间计时完成：写作30′/听力25′/阅读40′/翻译30′），当晚核对答案"], ["2026-11-14", "11月14日", "六", "综合", "弱项专训：针对上套卷失分最多的题型，集中练 15 题＋看解析；整理错因"], ["2026-11-15", "11月15日", "日", "复习", "错题回炉：重做本週所有错题；听 1 套真题听力保持手感"], ["2026-11-16", "11月16日", "一", "套卷", "真题/模拟套卷 1 套（按考试时间计时完成：写作30′/听力25′/阅读40′/翻译30′），当晚核对答案"], ["2026-11-17", "11月17日", "二", "综合", "弱项专训：针对上套卷失分最多的题型，集中练 15 题＋看解析；整理错因"], ["2026-11-18", "11月18日", "三", "套卷", "真题/模拟套卷 1 套（按考试时间计时完成：写作30′/听力25′/阅读40′/翻译30′），当晚核对答案"], ["2026-11-19", "11月19日", "四", "综合", "弱项专训：针对上套卷失分最多的题型，集中练 15 题＋看解析；整理错因"], ["2026-11-20", "11月20日", "五", "套卷", "真题/模拟套卷 1 套（按考试时间计时完成：写作30′/听力25′/阅读40′/翻译30′），当晚核对答案"], ["2026-11-21", "11月21日", "六", "综合", "弱项专训：针对上套卷失分最多的题型，集中练 15 题＋看解析；整理错因"], ["2026-11-22", "11月22日", "日", "复习", "错题回炉：重做本週所有错题；听 1 套真题听力保持手感"], ["2026-11-23", "11月23日", "一", "套卷", "真题/模拟套卷 1 套（按考试时间计时完成：写作30′/听力25′/阅读40′/翻译30′），当晚核对答案"], ["2026-11-24", "11月24日", "二", "综合", "弱项专训：针对上套卷失分最多的题型，集中练 15 题＋看解析；整理错因"], ["2026-11-25", "11月25日", "三", "套卷", "真题/模拟套卷 1 套（按考试时间计时完成：写作30′/听力25′/阅读40′/翻译30′），当晚核对答案"], ["2026-11-26", "11月26日", "四", "综合", "弱项专训：针对上套卷失分最多的题型，集中练 15 题＋看解析；整理错因"], ["2026-11-27", "11月27日", "五", "套卷", "真题/模拟套卷 1 套（按考试时间计时完成：写作30′/听力25′/阅读40′/翻译30′），当晚核对答案"], ["2026-11-28", "11月28日", "六", "综合", "弱项专训：针对上套卷失分最多的题型，集中练 15 题＋看解析；整理错因"], ["2026-11-29", "11月29日", "日", "复习", "错题回炉：重做本週所有错题；听 1 套真题听力保持手感"], ["2026-11-30", "11月30日", "一", "套卷", "真题/模拟套卷 1 套（按考试时间计时完成：写作30′/听力25′/阅读40′/翻译30′），当晚核对答案"], ["2026-12-01", "12月1日", "二", "综合", "弱项专训：针对上套卷失分最多的题型，集中练 15 题＋看解析；整理错因"], ["2026-12-02", "12月2日", "三", "套卷", "真题/模拟套卷 1 套（按考试时间计时完成：写作30′/听力25′/阅读40′/翻译30′），当晚核对答案"], ["2026-12-03", "12月3日", "四", "综合", "弱项专训：针对上套卷失分最多的题型，集中练 15 题＋看解析；整理错因"], ["2026-12-04", "12月4日", "五", "套卷", "真题/模拟套卷 1 套（按考试时间计时完成：写作30′/听力25′/阅读40′/翻译30′），当晚核对答案"], ["2026-12-05", "12月5日", "六", "综合", "弱项专训：针对上套卷失分最多的题型，集中练 15 题＋看解析；整理错因"], ["2026-12-06", "12月6日", "日", "复习", "错题回炉：重做本週所有错题；听 1 套真题听力保持手感"]]}, {"name": "阶段四 · 考前冲刺", "range": "12 月 7 日 — 12 月 18 日 · 全真模拟＋时间分配＋心态与物品准备", "days": [["2026-12-07", "12月7日", "一", "模拟", "全真模拟 1：严格 09:00 开考，完整做 1 套（写作→听力→阅读→翻译），训练涂卡与取舍"], ["2026-12-08", "12月8日", "二", "综合", "模拟复盘：逐题分析错因；最后过一遍高频词与写作模板；检查考试物品（准考证/身份证/耳机）"], ["2026-12-09", "12月9日", "三", "模拟", "全真模拟 2：严格 09:00 开考，完整做 1 套（写作→听力→阅读→翻译），训练涂卡与取舍"], ["2026-12-10", "12月10日", "四", "综合", "模拟复盘：逐题分析错因；最后过一遍高频词与写作模板；检查考试物品（准考证/身份证/耳机）"], ["2026-12-11", "12月11日", "五", "模拟", "全真模拟 3：严格 09:00 开考，完整做 1 套（写作→听力→阅读→翻译），训练涂卡与取舍"], ["2026-12-12", "12月12日", "六", "综合", "模拟复盘：逐题分析错因；最后过一遍高频词与写作模板；检查考试物品（准考证/身份证/耳机）"], ["2026-12-13", "12月13日", "日", "综合", "轻量复盘：翻看写作模板、翻译词库与错题本；早睡养精神"], ["2026-12-14", "12月14日", "一", "模拟", "全真模拟 4：严格 09:00 开考，完整做 1 套（写作→听力→阅读→翻译），训练涂卡与取舍"], ["2026-12-15", "12月15日", "二", "综合", "模拟复盘：逐题分析错因；最后过一遍高频词与写作模板；检查考试物品（准考证/身份证/耳机）"], ["2026-12-16", "12月16日", "三", "模拟", "全真模拟 5：严格 09:00 开考，完整做 1 套（写作→听力→阅读→翻译），训练涂卡与取舍"], ["2026-12-17", "12月17日", "四", "综合", "模拟复盘：逐题分析错因；最后过一遍高频词与写作模板；检查考试物品（准考证/身份证/耳机）"], ["2026-12-18", "12月18日", "五", "模拟", "全真模拟 6：严格 09:00 开考，完整做 1 套（写作→听力→阅读→翻译），训练涂卡与取舍"]]}];
+var KB1=[{"t": "1. 词汇积累策略", "chip": "掌握", "rows": [["大纲要点", "四级要求掌握约 4500 词汇量；核心是会『见词知义』，写作翻译才需拼写。按主题（教育/科技/环境/文化/健康）归类记忆效率更高。"], ["学习要点", "用词根词缀（un-/dis-/-tion/-able）扩词；用同义/反义网络记忆；结合例句与语境，避免死记中文释义；每天新词 30—50 + 滚动复习前日。"], ["训练要点", "准备生词本，记录『熟词生义』（如 book v. 预定、second v. 支持）；真题高频词优先；用 APP/卡片做间隔重复。"], ["应试提示", "阅读与听力只考识别，先保『认得』；写作翻译再补拼写。完形与选词填空考搭配，注意固定词组。"]]}, {"t": "2. 听力技巧", "chip": "掌握", "hot": true, "rows": [["大纲要点", "听力占 35%（短篇新闻 7 + 长对话 8 + 听力篇章 10 = 25 题）。听力结束即收答题卡，无单独涂卡时间。"], ["学习要点", "发卷先扫读所有选项，圈名词/动词预测话题；听时抓首尾句、转折（but/however）、因果（because/so）、数字与态度词；边听边涂卡。"], ["训练要点", "精听 4 步：盲听抓大意→看原文查漏→跟读模仿→再盲听到无障碍；每天 1—2 篇，配合真题音频。"], ["应试提示", "新闻常考首尾句与数字；长对话考对话意图与细节；篇章考主旨与举例。听不懂的题果断跳过，不纠结。"]]}, {"t": "3. 阅读技巧", "chip": "掌握", "hot": true, "rows": [["大纲要点", "阅读占 35%（选词填空 10 + 段落匹配 10 + 仔细阅读 10 = 30 题），建议用时 40 分钟。"], ["学习要点", "选词填空先判词性再填；段落匹配先读题干划关键词（专有名词/数字/长词）再扫读定位同义替换；仔细阅读先题干后原文、对比选项找改写。"], ["训练要点", "每天精读 1—2 篇，做完必复盘：定位句在哪、答案如何同义改写；积累『原文词→选项词』替换对。"], ["应试提示", "四级阅读答案 80% 是同义替换，很少照抄原文；绝对化选项（all/never）多为干扰。"]]}, {"t": "4. 写作模板", "chip": "熟悉", "rows": [["大纲要点", "写作 15%（106.5 分），30 分钟，多为议论文/现象描述/书信，120—180 词。"], ["学习要点", "三段式：首段引出话题/现象→主体段 2 个论据（举例/对比/因果）＋衔接词→尾段总结重申。背 3—5 套通用模板可保底。"], ["训练要点", "每周写 1—2 篇并自查：是否有 1—2 个从句、衔接是否自然、有无低级语法错；背诵高级衔接词（furthermore / nevertheless / as a result）。"], ["应试提示", "审题定体裁；卷面整洁；留 3 分钟检查主谓一致、时态、单复数。模板化可稳拿 80—90 分。"]]}, {"t": "5. 翻译技巧", "chip": "熟悉", "rows": [["大纲要点", "翻译 15%（106.5 分），汉译英段落，多考中国文化/社会发展/生态环保，140—160 汉字。"], ["学习要点", "先理清中文主干（主谓宾）→再挂修饰（定语用从句/分词、状语用介词短语）；不会的词用简单词解释绕开，不空着。"], ["训练要点", "积累『文化专有词』：四书五经、丝绸之路、改革开放、绿水青山等；练习『动词转名词/长句拆短句』的拆译。"], ["应试提示", "保证语法正确优先于辞藻华丽；检查时态、单复数、冠词；不会的词用解释法（如『旗袍』→ traditional Chinese dress）。"]]}, {"t": "6. 语法核心", "chip": "掌握", "rows": [["大纲要点", "写作翻译的语法底线：时态、语态、非谓语动词、三大从句（定/状/名）、虚拟语气、倒装。"], ["学习要点", "时态看时间状语；被动看主语承受；非谓语作定/状/补；定语从句 whose/which/that；名词性从句 what/that/whether。"], ["训练要点", "每类语法做 10 道专项，错题归类；写作中有意识地用 1—2 个从句与 1 个非谓语结构提档。"], ["应试提示", "虚拟语气（if I were / had done）与倒装（Not only...but also / 否定词开头）是高频考点，务必过关。"]]}];
+var QZBANK=[{"n": 1, "t": "词汇·核心词", "note": "必背：① 高频动词辨义——promote 促进 / prohibit 禁止 / expand 扩张 / reduce 减少；② 形近词——absent 缺席 / present 出席；economic 经济的 / economical 节约的；③ 固定搭配——have a passion for 热爱、a solution to ……的解决办法、the success of ……的成功。", "qs": [{"q": "The new policy will ______ economic growth in rural areas.", "o": ["promote", "prohibit", "prolong", "propose"], "a": "A", "ex": "promote 促进；prohibit 禁止；prolong 延长；propose 提议。促进经济增长用 promote。", "s": "", "b": 1}, {"q": "He was ______ from the meeting because of his serious illness.", "o": ["absent", "present", "assistant", "constant"], "a": "A", "ex": "absent 缺席的（be absent from）；present 出席的；assistant 助理；constant 持续的。", "s": "", "b": 1}, {"q": "The company plans to ______ its business to overseas markets.", "o": ["expand", "expend", "extend", "expose"], "a": "A", "ex": "expand 扩展（业务/市场）；expend 花费；extend 延长；expose 暴露。", "s": "", "b": 1}, {"q": "She has a strong ______ for classical music.", "o": ["passion", "patient", "pattern", "payment"], "a": "A", "ex": "have a passion for 对……有热情；patient 病人/耐心的；pattern 模式；payment 付款。", "s": "", "b": 1}, {"q": "The ______ of the project depends on adequate funding.", "o": ["success", "successive", "succeed", "such"], "a": "A", "ex": "success 名词『成功』，作主语；successive 连续的（形容词）；succeed 动词；such 如此的。", "s": "", "b": 1}, {"q": "We should ______ the use of plastic bags to protect the environment.", "o": ["reduce", "refuse", "regard", "reveal"], "a": "A", "ex": "reduce 减少；refuse 拒绝；regard 视为；reveal 揭示。环保语境用 reduce。", "s": "", "b": 1}]}, {"n": 2, "t": "语法·句子结构", "note": "必背：① 时态——by the time 用过去完成时(had done)；② 祈使句＋and/or＋将来时；③ 非谓语——lying 表『躺/位于』的状态；④ 虚拟语气 if I were；⑤ 定语从句 whose 表所属；⑥ 否定词开头用部分倒装（Not only did he…）。", "qs": [{"q": "By the time we arrived, the train ______.", "o": ["left", "has left", "had left", "leaves"], "a": "C", "ex": "by the time ＋ 过去动作，主句用过去完成时 had left。", "s": "", "b": 1}, {"q": "______ hard, and you will pass the exam.", "o": ["Study", "Studying", "To study", "Studied"], "a": "A", "ex": "祈使句（动词原形）＋ and ＋ 将来时，表『如果……就会』。", "s": "", "b": 1}, {"q": "The book ______ on the desk belongs to me.", "o": ["laying", "lying", "lay", "lain"], "a": "B", "ex": "现在分词 lying（lie 的现在分词）表『平躺/位于』的状态，作后置定语。", "s": "", "b": 1}, {"q": "If I ______ you, I would take the job offer.", "o": ["am", "was", "were", "be"], "a": "C", "ex": "虚拟语气与现在事实相反：if 从句用 were（所有人称）。", "s": "", "b": 1}, {"q": "The professor, ______ research focuses on AI, is very popular.", "o": ["who", "whose", "which", "that"], "a": "B", "ex": "whose 引导非限制性定语从句，表『教授的』研究。", "s": "", "b": 1}, {"q": "Not only ______ but he also finished the work ahead of time.", "o": ["he completed", "did he complete", "completed he", "he did complete"], "a": "B", "ex": "Not only 置于句首引起部分倒装：did he complete。", "s": "", "b": 1}]}, {"n": 3, "t": "听力·短篇新闻", "note": "技巧：新闻首尾句常是导语（核心事件）；注意数字、地点、原因（because/due to）；第一遍抓大意、第二遍补细节。下方题为『新闻文本理解』练习，正式训练请配合音频。", "qs": [{"q": "[新闻] A bridge in the south collapsed after days of heavy rain. What is the main cause?", "o": ["An earthquake", "Heavy rain", "A traffic accident", "A fire"], "a": "B", "ex": "原文明确 after days of heavy rain，主因是暴雨。", "s": "", "b": 1}, {"q": "[新闻] The government announced a new tax policy to support small businesses. Who benefits most?", "o": ["Big companies", "Small businesses", "Foreign investors", "Students"], "a": "B", "ex": "政策 purpose 是 support small businesses，受益最大的是小微企业。", "s": "", "b": 1}, {"q": "[新闻] A fire broke out in a downtown factory. Reports say ten people were injured. How many were injured?", "o": ["Five", "Ten", "Twenty", "None"], "a": "B", "ex": "原文 ten people were injured，受伤 10 人。", "s": "", "b": 1}, {"q": "[新闻] The mayor promised to improve public transport, starting with the suburbs. Which area gets priority?", "o": ["The suburbs", "Downtown", "The airport", "The port"], "a": "A", "ex": "starting with the suburbs 表明郊区优先。", "s": "", "b": 1}, {"q": "[新闻] Scientists discovered a new species of frog in the Amazon rainforest. Where was it found?", "o": ["The Amazon rainforest", "Africa", "Australia", "Antarctica"], "a": "A", "ex": "地点状语 in the Amazon rainforest。", "s": "", "b": 1}, {"q": "[新闻] The stock market dropped sharply, mainly due to rising inflation. What caused the drop?", "o": ["Rising inflation", "A new law", "Low interest", "Good earnings"], "a": "A", "ex": "due to rising inflation 点明原因：通胀上升。", "s": "", "b": 1}]}, {"n": 4, "t": "听力·长对话", "note": "技巧：长对话考『说话人意图、态度、细节数字』；注意问答中的回答句（W 的回答常是考点）；边听边在选项上做标记。下方为对话理解练习。", "qs": [{"q": "M: Can you finish the report by Friday? W: Sure, no problem. What does the woman mean?", "o": ["She cannot finish it", "She will finish it", "She needs help", "She is unsure"], "a": "B", "ex": "Sure, no problem 表示她能按时完成。", "s": "", "b": 1}, {"q": "W: The movie starts at 8. M: We'd better leave at 7:30. When will they leave?", "o": ["7:00", "7:30", "8:00", "8:30"], "a": "B", "ex": "男士说 leave at 7:30。", "s": "", "b": 1}, {"q": "M: How about going to the gym? W: I'd love to, but I have an exam tomorrow. What will she do?", "o": ["Go to the gym", "Study for the exam", "Watch a movie", "Take a nap"], "a": "B", "ex": "but 后是重点：她明天有考试，要去学习。", "s": "", "b": 1}, {"q": "M: Is the library open on Sunday? W: It closes at 5 p.m. What do we know?", "o": ["Open all day", "Closes at 5 on Sunday", "Closed on Sunday", "Open 24 hours"], "a": "B", "ex": "女士说周日 5 点关门，说明周日开放但 17:00 关闭。", "s": "", "b": 1}, {"q": "W: Your presentation was great! M: Thanks, I practiced a lot. How did he do?", "o": ["Poorly", "Very well", "Nervously", "Late"], "a": "B", "ex": "great / practiced a lot 表明表现很好。", "s": "", "b": 1}, {"q": "M: Do we need to bring anything? W: Just your ID and a pen. What should they bring?", "o": ["ID and a pen", "A book", "A laptop", "Nothing"], "a": "A", "ex": "女士说 Just your ID and a pen。", "s": "", "b": 1}]}, {"n": 5, "t": "听力·听力篇章", "note": "技巧：篇章（短文）考主旨、举例目的、数字细节与态度；首句常点题，结尾常总结。听时记关键词。下方为篇章理解练习。", "qs": [{"q": "[篇章·健康] A lecture says adults need 7—8 hours of sleep for good health. How many hours are recommended?", "o": ["5—6", "7—8", "9—10", "Over 10"], "a": "B", "ex": "原文 adults need 7—8 hours。", "s": "", "b": 1}, {"q": "[篇章·人物] The talk is about a scientist who developed a new vaccine. What is her achievement?", "o": ["A new vaccine", "A new planet", "A new book", "A new law"], "a": "A", "ex": "主题句点明 developed a new vaccine。", "s": "", "b": 1}, {"q": "[篇章·天气] The weather report says tomorrow will be sunny and warm. What will the weather be like?", "o": ["Rainy", "Sunny and warm", "Snowy", "Windy"], "a": "B", "ex": "原文 sunny and warm。", "s": "", "b": 1}, {"q": "[篇章·运动] The doctor suggests the best exercise is walking 30 minutes daily. What is the best exercise?", "o": ["Running a marathon", "Walking 30 min daily", "Lifting heavy weights", "Swimming weekly"], "a": "B", "ex": "原文 walking 30 minutes daily。", "s": "", "b": 1}, {"q": "[篇章·历史] The old factory was built in 1965 and closed in 2000. When was it built?", "o": ["1965", "1975", "1985", "2000"], "a": "A", "ex": "was built in 1965。", "s": "", "b": 1}, {"q": "[篇章·文化] The report says the festival attracts over 100,000 visitors each year. How many visitors?", "o": ["About 10,000", "Over 100,000", "1,000", "Exactly 50,000"], "a": "B", "ex": "over 100,000 visitors。", "s": "", "b": 1}]}, {"n": 6, "t": "阅读·选词填空", "note": "技巧：先判空格词性（n./v./adj./adv.），再在备选词中筛；注意固定搭配与单复数。下方为『词性＋词义』专项。", "qs": [{"q": "The ______ development has lifted millions out of poverty. (economy)", "o": ["economic", "economical", "economics", "economist"], "a": "A", "ex": "修饰 development 用形容词 economic（经济的）；economical 节约的；economics 经济学；economist 经济学家。", "s": "", "b": 1}, {"q": "She spoke ______ in the job interview and got the offer. (confident)", "o": ["confident", "confidence", "confidently", "confide"], "a": "C", "ex": "修饰动词 spoke 用副词 confidently。", "s": "", "b": 1}, {"q": "His ______ to help surprised everyone present. (refuse)", "o": ["refuse", "refusal", "refusable", "refused"], "a": "B", "ex": "His 后接名词 refusal（拒绝）。", "s": "", "b": 1}, {"q": "The ______ of the printing press changed human history. (invent)", "o": ["invent", "invention", "inventor", "inventive"], "a": "B", "ex": "the 后接名词 invention（发明）。", "s": "", "b": 1}, {"q": "We need a ______ to this environmental problem. (solve)", "o": ["solve", "solution", "solvent", "solving"], "a": "B", "ex": "a 后接名词 solution（解决办法），a solution to…。", "s": "", "b": 1}, {"q": "The children looked ______ at the birthday gift. (excite)", "o": ["excite", "excited", "exciting", "excitement"], "a": "B", "ex": "looked 为系动词，人作主语用 excited（感到兴奋的）。", "s": "", "b": 1}]}, {"n": 7, "t": "阅读·段落匹配", "note": "技巧：先读 10 个题干划『唯一关键词』（大写/数字/长难词），再回原文扫读定位同义替换；先易后难，已用段落划掉。下方为『定位策略』专项。", "qs": [{"q": "To find a specific year (like 1998) in a long passage quickly, you should first ______.", "o": ["read the whole text", "scan for the number", "guess the answer", "skip the headings"], "a": "B", "ex": "数字用 scanning（扫读）快速定位。", "s": "", "b": 1}, {"q": "In paragraph matching, the most efficient first step is to ______.", "o": ["read the passage fully", "match keywords from headings to paragraphs", "ignore all titles", "memorize the text"], "a": "B", "ex": "匹配题先拿题干关键词去段落中定位同义替换。", "s": "", "b": 1}, {"q": "A paragraph about 'cutting plastic waste' most likely matches a heading like ______.", "o": ["Climate Change", "Environmental Protection", "Higher Education", "Stock Market"], "a": "B", "ex": "减少塑料废物属于环保主题。", "s": "", "b": 1}, {"q": "When two headings look similar, choose the one that shares the ______ with the paragraph.", "o": ["exact keyword", "most words", "biggest font", "first position"], "a": "A", "ex": "相似标题靠『精确关键词』区分。", "s": "", "b": 1}, {"q": "Skimming a passage is mainly used to get its ______.", "o": ["detailed data", "general idea", "new vocabulary", "grammar rules"], "a": "B", "ex": "skimming（略读）用于把握主旨大意。", "s": "", "b": 1}, {"q": "Paragraph matching questions mainly test your ability to ______.", "o": ["memorize facts", "locate information fast", "translate sentences", "spell correctly"], "a": "B", "ex": "匹配题核心是快速信息定位。", "s": "", "b": 1}]}, {"n": 8, "t": "阅读·仔细阅读", "note": "技巧：先读题干（不看选项）→回原文定位句→对比选项找『同义替换』（答案多在此）→绝对化词（all/never/must）多为干扰。下方为理解专项。", "qs": [{"q": "[短文] Studies show people who read before bed fall asleep faster and sleep better. What is the finding?", "o": ["Reading causes insomnia", "Reading improves sleep", "Reading is harmful", "No effect at all"], "a": "B", "ex": "fall asleep faster and sleep better = 改善睡眠。", "s": "", "b": 1}, {"q": "In the text, 'sustainable' is closest in meaning to ______.", "o": ["temporary", "lasting", "expensive", "difficult"], "a": "B", "ex": "sustainable 可持续的，近义 lasting（持久的）。", "s": "", "b": 1}, {"q": "[短文] The startup failed due to poor management and cash flow problems. Why did it fail?", "o": ["Poor management", "Bad luck", "New technology", "Too many staff"], "a": "A", "ex": "due to poor management 直接给出原因。", "s": "", "b": 1}, {"q": "What is the main idea of a passage comparing online and offline shopping?", "o": ["Online is always cheaper", "Both have pros and cons", "Shops will disappear", "Nobody shops offline"], "a": "B", "ex": "对比类文章主旨通常是『各有优劣』。", "s": "", "b": 1}, {"q": "The author's attitude toward the new policy is described as ______.", "o": ["strongly supportive", "neutral and objective", "angry", "indifferent to the point of leaving"], "a": "B", "ex": "说明文作者态度多为中立客观（neutral and objective）。", "s": "", "b": 1}, {"q": "Which of the following is NOT mentioned in the passage about the festival?", "o": ["Its history", "Its location", "Its founder's favorite color", "Its activities"], "a": "C", "ex": "『创办人最喜欢的颜色』明显超范围、未被提及。", "s": "", "b": 1}]}, {"n": 9, "t": "翻译·汉译英", "note": "技巧：先搭主干（主谓宾）→再挂修饰（定语用从句/分词、状语用介词短语）；积累文化专有词；不会的词用解释法绕开。下方为『常用表达』选择专项。", "qs": [{"q": "『随着社会的发展』最恰当的英文翻译是？", "o": ["With the development of society", "Society develops", "Developing society", "Society's development"], "a": "A", "ex": "作状语用 With the development of society 最地道。", "s": "", "b": 1}, {"q": "『越来越少的人』可译为？", "o": ["Fewer and fewer people", "Many people", "People fewer", "The fewer people"], "a": "A", "ex": "『越来越……』用比较级叠加 fewer and fewer。", "s": "", "b": 1}, {"q": "『引起了广泛关注』可译为？", "o": ["attracted wide attention", "wide attention", "attention wide", "attract attention wide"], "a": "A", "ex": "attract wide attention 引起广泛关注，动词 attract 作谓语。", "s": "", "b": 1}, {"q": "『在……方面发挥着重要作用』对应？", "o": ["play an important role in", "important role", "role in important", "play role"], "a": "A", "ex": "固定搭配 play an important role in。", "s": "", "b": 1}, {"q": "『历史悠久』可译为？", "o": ["has a long history", "long history", "history long", "historical long"], "a": "A", "ex": "has a long history 作谓语。", "s": "", "b": 1}, {"q": "『绿色发展』对应？", "o": ["green development", "development green", "greenly develop", "develop green"], "a": "A", "ex": "green development 绿色发展，名词短语。", "s": "", "b": 1}]}, {"n": 10, "t": "写作·短文写作", "note": "技巧：三段式保底（引题→论证→总结）；用 3—5 个高级衔接词；主体段给具体论据（举例/数据/对比）；留 3 分钟检查语法。下方为『结构模板』选择专项。", "qs": [{"q": "四级写作最稳妥的结构通常是？", "o": ["一段式", "三段式", "五段式", "随意发挥"], "a": "B", "ex": "三段式（引题-论证-总结）最清晰易得高分。", "s": "", "b": 1}, {"q": "开头段最适合的作用是？", "o": ["直接给最终结论", "引出话题/现象", "堆砌细节", "罗列数据"], "a": "B", "ex": "开头段应引出话题或现象，再展开。", "s": "", "b": 1}, {"q": "下列哪个是表示『递进』的有效衔接词？", "o": ["and", "furthermore", "but", "because"], "a": "B", "ex": "furthermore 表递进；but 转折；because 因果。", "s": "", "b": 1}, {"q": "主体论证段应该？", "o": ["只重复观点", "提供论据(例子/数据)", "写无关内容", "留空白"], "a": "B", "ex": "论证段需具体论据支撑观点。", "s": "", "b": 1}, {"q": "结尾段最好？", "o": ["突然结束", "总结并重申观点", "引入全新话题", "道歉字数不够"], "a": "B", "ex": "结尾段总结并重申，首尾呼应。", "s": "", "b": 1}, {"q": "写作中最应避免的是？", "o": ["使用高级词汇", "明显语法错误", "三段式结构", "恰当衔接词"], "a": "B", "ex": "语法错误最拉分，应优先保证正确。", "s": "", "b": 1}]}];
+
+var TIPS=[
+["🎧","听力是分水岭","听力占 35%，且听完即收卡。每天精听 1—2 篇，盲听→看原文→跟读→再盲听，循环到无障碍。",
+ "🔤","词汇要『会认』优先于『会写』","阅读与听力只要求识别词义；写作翻译才需拼写。先保证高频词『见词知义』，再补拼写。",
+ "📖","仔细阅读找同义替换","四级阅读答案 80% 是同义改写，很少照抄原文。定位后对比选项，找 paraphrasing 而非原词。",
+ "✍️","写作背三段式模板","现象/观点段＋论证段（2 论据）＋总结段。模板化可保底 80—90 分，再靠高级衔接词提档。",
+ "🌐","翻译先主干后修饰","中文多短句，英文重结构。先定主谓宾，再用从句/分词/介词把修饰挂上去，避免逐字硬译。",
+ "⏱️","全真模拟严格计时","阶段三起按 09:00 开考、写作 30′/听力 25′/阅读 40′/翻译 30′ 计时，训练取舍与涂卡节奏。"]];
+
+/* ================= 存储 ================= */
+var KEY="cet4_progress_v1";
+var state={};try{state=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){state={}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function toast(msg){var t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(t._tm);t._tm=setTimeout(function(){t.classList.remove("show")},1400)}
+
+/* ================= 计划 ⇄ 知识点 ⇄ 刷题 联动 ================= */
+function showPanel(pid){
+  document.querySelectorAll(".tab").forEach(function(t){t.classList.toggle("on",t.dataset.p===pid)});
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.toggle("on",p.id===pid)});
+}
+function goQuiz(mod){
+  qzMod=mod;qzOnlyWrong=false;qzOnlyBook=false;qzOnlyReal=false;qzPos=0;
+  showPanel("p7");renderQzChips();renderQz();
+  if(typeof qzModeBtn==="function")qzModeBtn("qzModeAll","qzModeWrong","qzModeBook","qzModeReal");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function goKnowledge(mods,kbs){
+  mods=mods||[];kbs=kbs||[];
+  showPanel("p3");
+  QZBANK.forEach(function(b){
+    var el=document.getElementById("bank-"+b.n);
+    if(el)el.classList.toggle("open",mods.indexOf(b.n)>=0);
+  });
+  kbs.forEach(function(id){var el=document.getElementById(id);if(el)el.classList.add("open")});
+  setTimeout(function(){
+    var first=mods.length?document.getElementById("bank-"+mods[0]):(kbs.length?document.getElementById(kbs[0]):null);
+    if(first)first.scrollIntoView({behavior:"smooth",block:"start"});
+  },80);
+}
+/* 根据当天任务（标签+内容）推断相关知识点模块 */
+function dayMods(tag,task){
+  var s=tag+" "+task,mods=[],kbs=[];
+  /* 基于 tag 精确匹配优先，task 仅作补充——避免任务文案里的『写作/翻译/语法』等词被误抢 */
+  if(s.indexOf("听力·新闻")>=0||s.indexOf("短篇新闻")>=0||tag.indexOf("新闻")>=0)return{mods:[3],kbs:["kb1-1"]};
+  if(s.indexOf("听力·对话")>=0||s.indexOf("长对话")>=0)return{mods:[4],kbs:["kb1-1"]};
+  if(s.indexOf("听力·篇章")>=0||s.indexOf("听力篇章")>=0)return{mods:[5],kbs:["kb1-1"]};
+  if(tag.indexOf("听力")>=0)return{mods:[3,4,5],kbs:["kb1-1"]};
+  if(s.indexOf("选词")>=0||s.indexOf("选词填空")>=0)return{mods:[6],kbs:["kb1-2"]};
+  if(s.indexOf("匹配")>=0||s.indexOf("长篇阅读")>=0)return{mods:[7],kbs:["kb1-2"]};
+  if(s.indexOf("仔细阅读")>=0)return{mods:[8],kbs:["kb1-2"]};
+  if(tag.indexOf("阅读")>=0)return{mods:[6,7,8],kbs:["kb1-2"]};
+  if(tag.indexOf("写作")>=0||tag.indexOf("模板")>=0)return{mods:[10],kbs:["kb1-3"]};
+  if(tag.indexOf("翻译")>=0||s.indexOf("汉译英")>=0||s.indexOf("中国文化")>=0)return{mods:[9],kbs:["kb1-4"]};
+  if(tag.indexOf("词汇")>=0||s.indexOf("核心词")>=0||s.indexOf("高频词")>=0||s.indexOf("辨析")>=0)return{mods:[1],kbs:["kb1-0"]};
+  if(tag.indexOf("语法")>=0||s.indexOf("时态")>=0||s.indexOf("语态")>=0||s.indexOf("从句")>=0||s.indexOf("非谓语")>=0||s.indexOf("虚拟")>=0||s.indexOf("倒装")>=0||s.indexOf("句子结构")>=0)return{mods:[2],kbs:["kb1-5"]};
+  return{mods:[],kbs:[]};
+}
+function dayGo(tag,task){
+  var s=tag+" "+task;
+  /* 专项日优先联动知识点，避免任务里的「综合/套卷」等词抢走路由 */
+  if(/词汇|语法|听力|阅读|写作|翻译/.test(tag)){
+    var m0=dayMods(tag,task);
+    if(m0.mods.length||m0.kbs.length){goKnowledge(m0.mods,m0.kbs);return}
+  }
+  if(/整体|官网|大纲|说明|摸底|资源/.test(s)){showPanel("p6");window.scrollTo({top:0,behavior:"smooth"});toast("📌 先看资源与说明");return}
+  if(/模拟|套卷|真题|综合|小测|回炉|收心|错题/.test(s)){goQuiz(0);toast("🎯 综合刷题模式：建议按模块过一遍错题");return}
+  var m=dayMods(tag,task);
+  if(!m.mods.length&&!m.kbs.length){goQuiz(0);return}
+  goKnowledge(m.mods,m.kbs);
+}
+
+/* ================= 倒计时 ================= */
+var TARGET=new Date("2026-12-19T09:00:00+08:00").getTime();
+function tick(){
+  var d=TARGET-Date.now();
+  if(d<=0){document.querySelector(".countdown-card").innerHTML='<div style="text-align:center"><div class="cd-num" style="font-size:26px">考试进行中</div><div class="cd-title">2026 年 12 月 19 日 09:00—11:20 · 沉着应考 🏆</div></div>';return}
+  var day=Math.floor(d/864e5),h=Math.floor(d%864e5/36e5),m=Math.floor(d%36e5/6e4),s=Math.floor(d%6e4/1e3);
+  document.getElementById("cdD").textContent=day;
+  document.getElementById("cdH").textContent=("0"+h).slice(-2);
+  document.getElementById("cdM").textContent=("0"+m).slice(-2);
+  document.getElementById("cdS").textContent=("0"+s).slice(-2);
+}
+tick();setInterval(tick,1000);
+
+/* ================= tabs ================= */
+var tabs=document.getElementById("tabs");
+tabs.addEventListener("click",function(e){
+  var b=e.target.closest(".tab");if(!b)return;
+  document.querySelectorAll(".tab").forEach(function(t){t.classList.toggle("on",t===b)});
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.toggle("on",p.id===b.dataset.p)});
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+/* ================= 逐日计划渲染 ================= */
+var todayStr=new Date().toISOString().slice(0,10);
+var planBox=document.getElementById("planBox");
+STAGES.forEach(function(st,si){
+  var card=document.createElement("div");card.className="card";
+  var doneN=st.days.filter(function(d,i){return state["s"+si+"d"+i]}).length;
+  var head=document.createElement("div");head.className="stage-head";
+  head.innerHTML='<div class="stage-title">'+st.name+'<small>'+st.range+'</small></div><span class="stage-prog" id="sp'+si+'">'+doneN+' / '+st.days.length+'</span>';
+  var days=document.createElement("div");days.className="days";
+  head.addEventListener("click",function(){days.classList.toggle("open")});
+  st.days.forEach(function(d,di){
+    var id="s"+si+"d"+di;
+    var isToday=d[0]===todayStr;
+    var row=document.createElement("div");row.className="day"+(isToday?" today":"");
+    row.innerHTML='<input type="checkbox" class="chk" id="cb-'+id+'" '+(state[id]?"checked":"")+'>'+
+      '<div class="date">'+d[1]+'<b>'+d[2]+'</b></div>'+
+      '<div class="body"><span class="tag">'+d[3]+'</span>'+(isToday?'<span class="today-mark">今天</span>':'')+'<div class="task">'+d[4]+'</div></div>';
+    var cb=row.querySelector(".chk");
+    if(state[id])row.classList.add("done");
+    var tagEl=row.querySelector(".tag");
+    tagEl.classList.add("tag-link");
+    tagEl.title="点击查看本任务相关知识点＋刷题";
+    tagEl.addEventListener("click",function(e){e.stopPropagation();dayGo(d[3],d[4])});
+    cb.addEventListener("change",function(){
+      state[id]=cb.checked;if(!cb.checked)delete state[id];
+      row.classList.toggle("done",cb.checked);
+      save();refreshProg();if(cb.checked)toast("✅ 打卡成功，继续保持！");
+    });
+    days.appendChild(row);
+  });
+  if(si===0)days.classList.add("open");
+  card.appendChild(head);card.appendChild(days);planBox.appendChild(card);
+});
+
+/* ================= 知识点渲染 ================= */
+function renderKB(list,mount,prefix){
+  list.forEach(function(k,i){
+    var el=document.createElement("div");el.className="kb";el.id=prefix+"-"+i;
+    var chipClass=k.chip==="掌握"?"chip-master":(k.chip==="熟悉"?"chip-familiar":"chip-know");
+    var hot=k.hot?' <span class="kb-chip" style="background:#fee2e2;color:#b91c1c">高频</span>':"";
+    var rows=k.rows.map(function(r){return '<div class="row"><div class="k">'+r[0]+'</div><div class="v'+(r[0]==="训练要点"?" excel":"")+(r[0]==="应试提示"?" tip":"")+'">'+r[1]+'</div></div>'}).join("");
+    el.innerHTML='<div class="kb-head"><span class="kb-title">'+k.t+'</span><span class="kb-chip '+chipClass+'">'+k.chip+'</span>'+hot+'<span class="arrow">▶</span></div><div class="kb-body">'+rows+'</div>';
+    el.querySelector(".kb-head").addEventListener("click",function(){el.classList.toggle("open")});
+    document.getElementById(mount).appendChild(el);
+  });
+}
+renderKB(KB1,"kbS1","kb1");
+
+/* ================= 进度刷新（逐日计划） ================= */
+function refreshProg(){
+  var total=0,done=0;
+  STAGES.forEach(function(st,si){
+    var dn=0;
+    st.days.forEach(function(d,di){total++;if(state["s"+si+"d"+di]){done++;dn++}});
+    var sp=document.getElementById("sp"+si);if(sp)sp.textContent=dn+" / "+st.days.length;
+  });
+  var pt=document.getElementById("planTxt");pt.textContent=done+" / "+total+" 天";
+  document.getElementById("planBar").style.width=(total?done/total*100:0)+"%";
+  document.getElementById("allTxt").textContent="已打卡 "+done+" / "+total+" 天";
+  document.getElementById("allBar").style.width=(total?done/total*100:0)+"%";
+  document.getElementById("allPct").textContent="计划完成率 "+(total?Math.round(done/total*100):0)+"%";
+}
+refreshProg();
+
+/* ================= 资源中心：资料包 ================= */
+var BASE="files/";
+var RES=[
+{ico:"📖",t:"高频核心词汇表（速记版）",s:"按主题整理的 CET-4 高频核心词约 300 个，含词性、释义与例句，浏览器直接打开，可搜索、可另存为 PDF。",url:BASE+"cet4-vocab.html",act:"在线打开",ext:true},
+{ico:"🏛️",t:"官方报名 / 准考证 / 查分",s:"教育部教育考试院（NEEA）全国大学英语四、六级考试官网，报名、打印准考证与成绩查询的唯一官方入口。",url:"https://cet.neea.edu.cn",act:"前往官网",ext:true}];
+var resBox=document.getElementById("resBox");
+RES.forEach(function(r){
+  var c=document.createElement("div");c.className="card tip-card";
+  c.innerHTML='<div class="ico">'+r.ico+'</div><div style="flex:1"><b>'+r.t+'</b><p>'+r.s+'</p></div>'+
+    '<a class="tab" style="align-self:center;text-decoration:none;flex:none" href="'+r.url+'"'+(r.ext?' target="_blank" rel="noopener"':' download')+'>'+r.act+'</a>';
+  resBox.appendChild(c);
+});
+
+/* ================= 必背速记渲染 ================= */
+var kbBank=document.getElementById("kbBank");
+QZBANK.forEach(function(b){
+  var el=document.createElement("div");el.className="kb";el.id="bank-"+b.n;
+  el.innerHTML='<div class="kb-head"><span class="kb-title">'+b.n+'. '+b.t+'</span><span class="kb-chip chip-familiar">'+b.qs.length+' 题</span><span class="arrow">▶</span></div><div class="kb-body"><div class="row"><div class="k">必背</div><div class="v excel">'+b.note+'</div></div><div class="row"><div class="k">练一练</div><div class="v"><button class="tab" style="background:var(--soft);color:var(--primary)">🎯 刷本模块 '+b.qs.length+' 题</button></div></div></div>';
+  el.querySelector(".kb-head").addEventListener("click",function(){el.classList.toggle("open")});
+  el.querySelector("button").addEventListener("click",function(){goQuiz(b.n)});
+  kbBank.appendChild(el);
+});
+
+/* ================= 在线刷题 ================= */
+var QKEY="cet4_quiz_v1";
+var qz={};try{qz=JSON.parse(localStorage.getItem(QKEY))||{}}catch(e){qz={}}
+if(!qz.wrong)qz.wrong={};if(!qz.done)qz.done={};
+function qzSave(){try{localStorage.setItem(QKEY,JSON.stringify(qz))}catch(e){}}
+
+var ALLQ=[];
+QZBANK.forEach(function(b){b.qs.forEach(function(q){ALLQ.push({m:b.n,mt:b.t,q:q.q,o:q.o,a:q.a,ex:q.ex,s:q.s,b:q.b||0,gid:b.n+"-"+q.q.slice(0,24)})})});
+var BOOKN=ALLQ.filter(function(q){return q.b>0}).length;
+var REALN=ALLQ.filter(function(q){return q.s==="真题"}).length;
+var qzMod=0,qzOnlyWrong=false,qzOnlyBook=false,qzOnlyReal=false,qzPos=0;
+
+function qzList(){
+  var arr=ALLQ.filter(function(q){return !qzMod||q.m===qzMod});
+  if(qzOnlyWrong)arr=arr.filter(function(q){return qz.wrong[q.gid]});
+  if(qzOnlyBook)arr=arr.filter(function(q){return q.b>0});
+  if(qzOnlyReal)arr=arr.filter(function(q){return q.s==="真题"});
+  return arr;
+}
+function qzStats(){
+  var doneN=0,wrongN=0;
+  ALLQ.forEach(function(q){if(qz.done[q.gid]!==undefined)doneN++;if(qz.wrong[q.gid])wrongN++});
+  document.getElementById("qzStat").textContent="已刷 "+doneN+" / "+ALLQ.length+" 题 · 正确率 "+(doneN?Math.round((doneN-wrongN)/doneN*100):0)+"%";
+  document.getElementById("qzBar").style.width=(ALLQ.length?doneN/ALLQ.length*100:0)+"%";
+  document.getElementById("qzModeWrong").textContent="🔁 只刷错题（"+wrongN+"）";
+  document.getElementById("qzModeBook").textContent="📚 平台题库（"+BOOKN+"）";
+  document.getElementById("qzModeReal").textContent="🎯 真题（"+REALN+"）";
+}
+function renderQzChips(){
+  var box=document.getElementById("qzChips");box.innerHTML="";
+  var mk=function(label,val){
+    var b=document.createElement("button");b.className="tab";
+    b.style.cssText=val===qzMod?"background:var(--primary);color:#fff":"background:var(--soft);color:var(--primary)";
+    b.textContent=label;
+    b.addEventListener("click",function(){qzMod=val;qzPos=0;renderQzChips();renderQz()});
+    box.appendChild(b);
+  };
+  mk("全部模块",0);
+  QZBANK.forEach(function(b){mk(b.n+". "+b.t.slice(0,9),b.n)});
+}
+function renderQz(){
+  var list=qzList(),card=document.getElementById("qzCard");
+  qzStats();
+  if(!list.length){
+    card.className="card";card.innerHTML='<div style="text-align:center;padding:26px 10px"><div style="font-size:40px">🎉</div><b style="font-size:15.5px">'+(qzOnlyWrong?"错题已清空，太棒了！":"暂无题目")+'</b><p style="font-size:13px;color:var(--muted);margin-top:6px">'+(qzOnlyWrong?"回「全部题」模式继续巩固，或换模块练习。":"请选择模块开始刷题。")+'</p></div>';
+    return;
+  }
+  if(qzPos>=list.length)qzPos=list.length-1;
+  if(qzPos<0)qzPos=0;
+  var q=list[qzPos],pick=qz.done[q.gid],ansIdx="ABCD".indexOf(q.a);
+  var tags=[];
+  if(q.b===1)tags.push('<span class="kb-chip chip-book">📗 平台示例</span>');
+  if(q.b===2)tags.push('<span class="kb-chip chip-book2">📘 强化题</span>');
+  if(q.b===3)tags.push('<span class="kb-chip chip-book3">📙 易错题</span>');
+  if(q.s==="真题")tags.push('<span class="kb-chip chip-master">真题</span>');
+  var srcTag=tags.length?'<span style="display:flex;gap:6px;flex-wrap:wrap">'+tags.join("")+'</span>':"";
+  var opts=q.o.map(function(t,i){
+    var cls="qz-opt";
+    if(pick!==undefined){
+      if(i===ansIdx)cls+=" correct";
+      else if("ABCD"[i]===pick)cls+=" wrong";
+    }
+    return '<div class="'+cls+'" data-i="'+i+'"><b>'+"ABCD"[i]+'.</b> '+t+'</div>';
+  }).join("");
+  var exHtml=pick!==undefined?'<div class="qz-ex"><b>'+(pick===q.a?"✅ 答对了":"❌ 答错了 · 正确答案 "+q.a)+'</b><br>'+q.ex+'</div>':'<div class="prog-txt" style="margin-top:10px">点击选项即判分并显示解析</div>';
+  card.className="card";
+  card.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px"><span class="prog-txt">第 '+(qzPos+1)+' / '+list.length+' 题 · 模块 '+q.m+'</span>'+srcTag+'</div>'+
+    '<div style="font-size:15px;font-weight:700;line-height:1.8">'+q.q+'</div>'+
+    '<div style="margin-top:12px">'+opts+'</div>'+exHtml;
+  card.querySelectorAll(".qz-opt").forEach(function(el){
+    el.addEventListener("click",function(){
+      if(qz.done[q.gid]!==undefined)return;
+      var i=+el.dataset.i,pickL="ABCD"[i];
+      qz.done[q.gid]=pickL;
+      if(pickL===q.a)delete qz.wrong[q.gid];else qz.wrong[q.gid]=1;
+      qzSave();renderQz();
+      if(pickL===q.a)toast("✅ 答对了！");else toast("❌ 错了，已加入错题本");
+    });
+  });
+}
+document.getElementById("qzPrev").addEventListener("click",function(){qzPos--;renderQz()});
+document.getElementById("qzNext").addEventListener("click",function(){qzPos++;renderQz()});
+function qzModeBtn(allId,wrongId,bookId,realId){
+  var A=document.getElementById(allId),W=document.getElementById(wrongId),B=document.getElementById(bookId),R=document.getElementById(realId);
+  A.style.background=(qzOnlyWrong||qzOnlyBook||qzOnlyReal)?"var(--soft)":"var(--primary)";
+  A.style.color=(qzOnlyWrong||qzOnlyBook||qzOnlyReal)?"var(--primary)":"#fff";
+  W.style.background=qzOnlyWrong?"var(--primary)":"var(--soft)";
+  W.style.color=qzOnlyWrong?"#fff":"var(--primary)";
+  B.style.background=qzOnlyBook?"#d97706":"var(--soft)";
+  B.style.color=qzOnlyBook?"#fff":"#92400e";
+  R.style.background=qzOnlyReal?"#b91c1c":"var(--soft)";
+  R.style.color=qzOnlyReal?"#fff":"#b91c1c";
+  qzPos=0;renderQz();
+}
+document.getElementById("qzModeAll").addEventListener("click",function(){qzOnlyWrong=false;qzOnlyBook=false;qzOnlyReal=false;qzModeBtn("qzModeAll","qzModeWrong","qzModeBook","qzModeReal")});
+document.getElementById("qzModeWrong").addEventListener("click",function(){qzOnlyWrong=true;qzOnlyBook=false;qzOnlyReal=false;qzModeBtn("qzModeAll","qzModeWrong","qzModeBook","qzModeReal")});
+document.getElementById("qzModeBook").addEventListener("click",function(){qzOnlyWrong=false;qzOnlyBook=true;qzOnlyReal=false;qzModeBtn("qzModeAll","qzModeWrong","qzModeBook","qzModeReal")});
+document.getElementById("qzModeReal").addEventListener("click",function(){qzOnlyWrong=false;qzOnlyBook=false;qzOnlyReal=true;qzModeBtn("qzModeAll","qzModeWrong","qzModeBook","qzModeReal")});
+document.getElementById("qzReset").addEventListener("click",function(){
+  if(!confirm("确定清空全部刷题记录和错题本吗？"))return;
+  qz={wrong:{},done:{}};qzSave();renderQz();toast("已重置刷题记录");
+});
+renderQzChips();renderQz();
+
+/* ================= 官方入口 ================= */
+var LINKS=[
+["全国大学英语四、六级考试官网","https://cet.neea.edu.cn"],
+["准考证打印 / 成绩查询入口","https://cet-bm.neea.edu.cn"]];
+var lb=document.getElementById("linksBox");
+LINKS.forEach(function(l){
+  var a=document.createElement("div");a.style.cssText="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--border);font-size:13.8px;flex-wrap:wrap";
+  if(lb.children.length===0)a.style.borderTop="none";
+  a.innerHTML='<span>'+l[0]+'</span><a href="'+l[1]+'" target="_blank" rel="noopener" style="color:var(--primary);word-break:break-all">'+l[1]+'</a>';
+  lb.appendChild(a);
+});
+var ref=document.createElement("div");ref.style.cssText="font-size:12.5px;color:var(--muted);margin-top:10px";
+ref.textContent="参考依据：CET-4 考试大纲与主流备考体系（听力 35% / 阅读 35% / 写作 15% / 翻译 15%）。";
+lb.appendChild(ref);
+</script>
+</body>
+</html>
