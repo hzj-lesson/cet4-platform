@@ -327,18 +327,51 @@ body.maimemo{padding-bottom:0}
 /* ================= 沉浸式背词模式（墨墨） ================= */
 #imm{position:fixed;inset:0;z-index:1500;background:#fff;display:none;flex-direction:column}
 body.im-on #imm{display:flex}
-.im-top{display:flex;align-items:center;gap:10px;padding:11px 15px;border-bottom:1px solid var(--border);flex:0 0 auto}
+.wdetail{position:fixed;inset:0;z-index:2000;background:#fff;display:none;flex-direction:column}
+body.wd-on .wdetail{display:flex}
+.wd-top{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;border-bottom:1px solid var(--border);flex:0 0 auto}
+.wd-x{border:none;background:transparent;font-size:21px;line-height:1;color:var(--muted);cursor:pointer;padding:5px 7px;font-family:inherit;border-radius:9px}
+.wd-x:hover{background:var(--soft);color:var(--primary)}
+.wd-title{font-size:15px;font-weight:700;color:var(--fg);flex:1;text-align:center}
+.wd-body{flex:1;overflow-y:auto;padding:18px 16px 40px}
+.wd-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px 16px;margin-bottom:14px}
+.wd-word{font-size:30px;font-weight:800;color:var(--primary);text-align:center;line-height:1.2}
+.wd-py{font-size:14px;color:var(--primary);text-align:center;margin-top:8px}
+.wd-def{font-size:17px;font-weight:600;color:var(--fg);line-height:1.7;margin-top:6px}
+.wd-ex{font-size:13.5px;color:var(--muted);line-height:1.8;margin-top:10px}
+.wd-sec-title{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;letter-spacing:2px}
+.wd-xr{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px 12px}
+.wd-xr .wd-ic{font-size:16px;line-height:1.5;flex:0 0 auto}
+.wd-xr .wd-xc{flex:1;min-width:0}
+.wd-xr .wd-xc b{display:block;color:var(--primary);font-size:12px;font-weight:700;margin-bottom:2px}
+.wd-xr .wd-xc span{font-size:13.5px;color:var(--fg);line-height:1.7;word-break:break-word}
+.wd-stat{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.wd-stat .wd-s{flex:1;min-width:120px;background:var(--soft);border-radius:12px;padding:12px;text-align:center}
+.wd-stat .wd-s b{display:block;font-size:18px;color:var(--primary);margin-bottom:3px}
+.wd-stat .wd-s span{font-size:11px;color:var(--muted)}
+.wd-acts{display:flex;gap:8px;margin-top:18px}
+.wd-acts button{flex:1;padding:12px;border-radius:12px;border:none;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.wd-acts .wd-known{background:var(--primary);color:#fff}
+.wd-acts .wd-edit{background:var(--soft);color:var(--primary)}
+.wd-acts .wd-del{background:#fff7f7;color:#b91c1c;border:1px solid #fecaca}
+.im-top{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;border-bottom:1px solid var(--border);flex:0 0 auto;gap:10px}
 .im-x{border:none;background:transparent;font-size:21px;line-height:1;color:var(--muted);cursor:pointer;padding:5px 7px;font-family:inherit;border-radius:9px}
 .im-x:hover{background:var(--soft);color:var(--primary)}
-.im-title{font-size:13px;font-weight:700;color:var(--fg);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.im-num{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.im-head{flex:1;min-width:0}
+.im-title,.im-num{display:none}
+.im-actions{display:flex;align-items:center;gap:6px}
+.im-known{border:1px solid var(--primary);background:transparent;color:var(--primary);font-size:13px;font-weight:700;border-radius:8px;padding:4px 10px;cursor:pointer;font-family:inherit;transition:.15s}
+.im-known:hover{background:var(--soft)}
 .im-track{height:3px;background:#eef4f3;flex:0 0 auto}
 .im-track i{display:block;height:100%;background:var(--primary);width:0%;transition:width .25s}
 .im-stage{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:14px 20px;overflow-y:auto}
 .im-card{width:100%;max-width:540px;text-align:center;cursor:pointer;user-select:none;padding:22px 14px;border-radius:18px;position:relative}
 .im-card:hover{background:#fafdfc}
-/* 右上角三点：删除此词 / 编辑释义（墨墨单词详情页同款入口） */
-.im-dots{position:absolute;top:2px;right:4px;width:34px;height:34px;border:none;background:transparent;color:var(--muted);font-size:22px;line-height:1;cursor:pointer;border-radius:10px;padding:0;font-family:inherit}
+/* 顶部三点 + 熟知按钮（墨墨同款：✕ | 空 | 熟 · ⋮） */
+.im-dots{position:static;width:32px;height:32px;border:none;background:transparent;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;border-radius:9px;padding:0;font-family:inherit}
+.im-dots:hover{background:var(--soft)}
+.im-hint{font-size:16px;color:var(--fg);margin-top:26px;font-weight:600}
+.im-subhint{font-size:13px;color:var(--muted);margin-top:8px}
 .im-dots:hover{background:var(--soft);color:var(--primary)}
 .im-menu{position:fixed;z-index:9999;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 10px 30px rgba(15,23,42,.16);padding:6px;min-width:170px}
 .im-menu button{display:block;width:100%;text-align:left;padding:10px 12px;border:none;background:transparent;font-family:inherit;font-size:13.5px;color:var(--fg);border-radius:8px;cursor:pointer}
@@ -365,18 +398,22 @@ body.im-on #imm{display:flex}
 .rewday.on{background:var(--primary);color:#fff}
 .im-tag{display:inline-block;font-size:11.5px;padding:2px 10px;border-radius:20px;background:var(--soft);color:var(--primary);font-weight:700;margin-bottom:16px}
 .im-tag.rev{background:#fef3c7;color:#92400e}
-.im-word{font-size:38px;font-weight:800;letter-spacing:.5px;color:var(--fg);line-height:1.25;word-break:break-word}
+.im-word{font-size:38px;font-weight:800;letter-spacing:.5px;color:var(--primary);line-height:1.25;word-break:break-word}
 .im-py{color:var(--primary);font-size:14.5px;margin-top:9px;letter-spacing:.4px}
 .im-sub{font-size:24px;font-weight:800;color:var(--fg);line-height:1.4}
 .im-div{height:1px;background:var(--border);margin:20px auto;max-width:420px}
 .im-def{font-size:19px;font-weight:600;color:var(--fg);line-height:1.6}
 .im-ex{font-size:14px;color:var(--muted);line-height:1.8;margin-top:14px;max-width:440px;margin-left:auto;margin-right:auto}
 .im-hint{font-size:12.5px;color:var(--muted);margin-top:18px}
-.im-extra{margin-top:18px;padding-top:14px;border-top:1px dashed var(--border);max-width:460px;margin-left:auto;margin-right:auto;text-align:left}
-.im-xr{font-size:12.5px;line-height:1.75;color:var(--muted);margin-bottom:6px;display:flex;gap:8px}
-.im-xr b{flex:0 0 34px;color:var(--primary);font-weight:700}
-.im-xr span{flex:1;min-width:0;word-break:break-word}
-.im-more{margin-top:8px;text-align:center;font-size:12px;color:var(--primary);cursor:pointer;padding:6px;border-radius:8px;font-weight:600}
+/* 墨墨式「助记」区块：每条一张卡片，左侧图标 + 标题 + 内容 */
+.im-extra{margin-top:18px;max-width:460px;margin-left:auto;margin-right:auto;text-align:left}
+.im-mn-head{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;letter-spacing:2px}
+.im-xr{display:flex;gap:10px;align-items:flex-start;margin-bottom:9px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px 12px;text-align:left}
+.im-xr .im-ic{font-size:16px;line-height:1.5;flex:0 0 auto}
+.im-xr .im-xc{flex:1;min-width:0}
+.im-xr .im-xc b{display:block;color:var(--primary);font-size:12px;font-weight:700;margin-bottom:2px}
+.im-xr .im-xc span{font-size:13.5px;color:var(--fg);line-height:1.7;word-break:break-word}
+.im-more{margin-top:6px;text-align:center;font-size:12.5px;color:var(--primary);cursor:pointer;padding:8px;border-radius:8px;font-weight:600}
 .im-more:hover{background:var(--soft)}
 .im-opts{display:flex;flex-direction:column;gap:9px;max-width:440px;margin:16px auto 0;width:100%}
 .im-opt{text-align:left;padding:13px 15px;border:1.5px solid var(--border);border-radius:12px;background:#fff;font-family:inherit;font-size:14.5px;cursor:pointer;transition:.15s;color:var(--fg)}
@@ -392,13 +429,14 @@ body.im-on #imm{display:flex}
 .im-bar{display:flex;gap:7px;max-width:540px;margin:0 auto}
 .im-bar button{flex:1;padding:14px 6px;border-radius:12px;border:1.5px solid var(--border);background:#fff;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;color:var(--fg)}
 .im-bar button:hover{transform:translateY(-1px)}
-.im-bar .b0{border-color:#fecaca;color:#b91c1c;background:#fff7f7}
-.im-bar .b0:hover{background:#fef2f2}
-.im-bar .b1{border-color:#fde68a;color:#92400e;background:#fffdf5}
-.im-bar .b1:hover{background:#fef3c7}
-.im-bar .b2{border-color:#bbf7d0;color:#15803d;background:#f8fffa}
-.im-bar .b2:hover{background:#f0fdf4}
-.im-bar .b2.lp{box-shadow:0 0 0 2px #16a34a inset;background:#f0fdf4}
+/* 墨墨式评价按钮：实心色块——忘记(红)/模糊(黄)/认识(绿)，白字，一眼可辨 */
+.im-bar .b0{background:#ff6b6b;color:#fff;border-color:#ff6b6b}
+.im-bar .b0:hover{background:#f5564f}
+.im-bar .b1{background:#ffb020;color:#fff;border-color:#ffb020}
+.im-bar .b1:hover{background:#f4a50f}
+.im-bar .b2{background:#21c17a;color:#fff;border-color:#21c17a}
+.im-bar .b2:hover{background:#1aa76a}
+.im-bar .b2.lp{box-shadow:0 0 0 3px #fff inset,0 0 0 4px #21c17a;background:#1aa76a}
 .im-bar .wide{flex:1;background:var(--primary);color:#fff;border-color:var(--primary)}
 .im-bar .ghost{border:none;background:transparent;color:var(--muted);font-weight:500}
 .im-bar .ghost:hover{color:var(--primary);background:var(--soft)}
@@ -735,12 +773,26 @@ body.im-on #imm{display:flex}
   <div id="imm">
     <div class="im-top">
       <button class="im-x" id="imClose" title="退出">✕</button>
-      <div class="im-title" id="imTitle">复习</div>
-      <div class="im-num" id="imNum">0 / 0</div>
+      <div class="im-head" id="imTitle"></div>
+      <div class="im-actions">
+        <button class="im-known" id="imKnownBtn" title="标为熟知">熟</button>
+        <button class="im-dots" id="imDots" title="更多">⋮</button>
+      </div>
+      <div class="im-num" id="imNum" style="display:none">0 / 0</div>
     </div>
     <div class="im-track"><i id="imTrack"></i></div>
     <div class="im-stage" id="imStage"></div>
     <div class="im-foot"><div id="imFoot"></div></div>
+  </div>
+
+  <!-- 单词详情页：墨墨式，点击背面单词进入（音标/释义/例句/助记/真题/记忆曲线） -->
+  <div class="wdetail" id="wordDetail" style="display:none">
+    <div class="wd-top">
+      <button class="wd-x" id="wdClose" title="返回">✕</button>
+      <div class="wd-title">单词详情</div>
+      <div style="width:32px"></div>
+    </div>
+    <div class="wd-body" id="wdBody"></div>
   </div>
 
   <div class="panel" id="p9">
@@ -809,12 +861,12 @@ body.im-on #imm{display:flex}
     <div class="pick-grid" id="bookList">
       <button class="pick-book on" data-b="cet4">
         <span class="pb-ic">四级</span>
-        <span class="pb-tx"><b>大学英语四级核心词</b><span id="bkSub-cet4">CET-4 · 3246 词</span></span>
+        <span class="pb-tx"><b>大学英语四级核心词</b><span id="bkSub-cet4">共 3690 词</span></span>
         <span class="pb-go">进入 ›</span>
       </button>
       <button class="pick-book" data-b="cet6">
         <span class="pb-ic">六级</span>
-        <span class="pb-tx"><b>大学英语六级核心词</b><span id="bkSub-cet6">CET-6 · 364 词</span></span>
+        <span class="pb-tx"><b>大学英语六级核心词</b><span id="bkSub-cet6">共 2246 词</span></span>
         <span class="pb-go">进入 ›</span>
       </button>
       <button class="pick-book" data-b="all">
@@ -1616,16 +1668,19 @@ var imOn = false, imQuizOpts = null, imQuizAns = "";
 var imDetailOpen = false;
 function extraInfo(v) {
   var rows = '';
-  if (v.rel) rows += '<div class="im-xr"><b>词根</b><span>' + esc(v.rel) + '</span></div>';
-  if (v.syn) rows += '<div class="im-xr"><b>近义</b><span>' + esc(v.syn) + '</span></div>';
-  if (v.ph) rows += '<div class="im-xr"><b>短语</b><span>' + esc(v.ph) + '</span></div>';
-  if (imDetailOpen) {
-    if (v.en) rows += '<div class="im-xr"><b>英释</b><span>' + esc(v.en) + '</span></div>';
-    if (v.re) rows += '<div class="im-xr"><b>真题</b><span>' + esc(v.re) + '</span></div>';
+  function row(ic, t, txt) {
+    return '<div class="im-xr"><span class="im-ic">' + ic + '</span><div class="im-xc"><b>' + t + '</b><span>' + esc(txt) + '</span></div></div>';
   }
-  if (!v.rel && !v.syn && !v.ph && !v.en && !v.re) return '';
+  if (v.rel) rows += row('🌱', '词根', v.rel);
+  if (v.syn) rows += row('🔗', '近义', v.syn);
+  if (v.ph) rows += row('📎', '短语', v.ph);
+  if (imDetailOpen) {
+    if (v.en) rows += row('🔤', '英释', v.en);
+    if (v.re) rows += row('🎯', '真题', v.re);
+  }
+  if (!rows) return '';
   var more = (v.en || v.re) ? '<div class="im-more" id="imMore2">' + (imDetailOpen ? '收起 −' : '英英释义 · 真题原句 +') + '</div>' : '';
-  return '<div class="im-extra">' + rows + more + '</div>';
+  return '<div class="im-extra"><div class="im-mn-head">助记</div>' + rows + more + '</div>';
 }
 function openImm() {
   if (!fQ.length) newFlash();
@@ -1679,7 +1734,7 @@ function renderFlash() {
     var unl = wList().filter(function (v) { var m = mm[v.w]; return !(m && m.last) && !(m && m.kg) }).length;
     var dR = dayRec(), capLeft = Math.max(0, NEWCAP - dR.neu);
     var d = dayRec(), todayN = d.neu + d.ok + d.fail;
-    if (title) title.textContent = '今日复习完成';
+    if (title) title.textContent = '';
     if (num) num.textContent = '';
     if (trk) trk.style.width = '100%';
     stage.innerHTML = '<div class="im-done">' +
@@ -1693,7 +1748,7 @@ function renderFlash() {
       '</div><div class="im-cal" id="imCal"></div><div class="mc-wd">' +
       ['一', '二', '三', '四', '五', '六', '日'].map(function (x) { return '<span>' + x + '</span>' }).join('') + '</div></div>';
     foot.innerHTML = '<div class="im-bar">' +
-      '<button class="b2" id="imMore">继续复习</button>' +
+      '<button class="b2" id="imMore">再来一组</button>' +
       '<button class="ghost" data-f="exit">退出</button></div>';
     renderMiniCal();
     bindImmBtns();
@@ -1702,9 +1757,10 @@ function renderFlash() {
   if (fIdx >= fQ.length) fIdx = 0;
   var it = fQ[fIdx], v = it.v, now = Date.now();
   var isNew = !!it.neu, p = isNew ? 0 : memP(v.w, now);
-  if (title) title.textContent = isNew ? '新词' : '复习' + (isNew ? '' : ' · 第 ' + (memGet(v.w).n + 1) + ' 次');
-  /* 墨墨式：顶部显示「剩余待学」而非分数（同一天重复会让总数动态增减） */
-  if (num) num.textContent = '剩余 ' + fQ.length + ' 词';
+  if (title) title.textContent = '';
+  /* 墨墨式：顶部实时显示「新学 X · 复习 Y」（同一天重复会让总数动态增减） */
+  var _nN = fQ.filter(function (it) { return it.neu }).length, _nR = fQ.length - _nN;
+  if (num) num.textContent = '新学 ' + _nN + ' · 复习 ' + _nR;
   if (trk) {
     if (!fQ._peak || fQ.length > fQ._peak) fQ._peak = fQ.length;
     trk.style.width = Math.round((1 - fQ.length / Math.max(1, fQ._peak)) * 100) + '%';
@@ -1718,7 +1774,7 @@ function renderFlash() {
       (v.py ? '<div class="im-py">' + esc(v.py) + '</div>' : '') +
       (v.ex ? '<div class="im-ex">' + esc(v.ex) + '</div>' : '') + detail;
   } else {
-    back = '<div class="im-word" style="font-size:27px">' + esc(v.w) + '</div>' +
+    back = '<div class="im-word" style="font-size:27px" id="imWordDetail">' + esc(v.w) + '</div>' +
       (v.py ? '<div class="im-py">' + esc(v.py) + '</div>' : '') +
       '<div class="im-div"></div>' +
       '<div class="im-def">' + esc(defOf(v)) + '</div>' +
@@ -1726,6 +1782,7 @@ function renderFlash() {
   }
   /* 正面 */
   var front;
+  /* 墨墨：正面展示单词 + 音标 + 发音按钮，提示「请回忆单词发音和释义」。点屏幕/按钮才揭晓。 */
   if (fMode === 'zh2en') {
     front = '<div class="im-sub">' + esc(defOf(v)) + '</div>' + (v.py ? '<div class="im-py">' + esc(v.py) + '</div>' : '');
   } else {
@@ -1754,9 +1811,8 @@ function renderFlash() {
     var cardCls = fShow ? '' : '';
     stage.innerHTML = '<div class="im-card' + cardCls + '" id="imCard">' +
       '<div class="im-tag' + (isNew ? '' : ' rev') + '">' + (isNew ? '新词' : '复习') + '</div>' +
-      '<button class="im-dots" id="imDots" title="更多">⋯</button>' +
       (fShow ? back : front) +
-      (fShow ? '' : '<div class="im-hint">想一下它的意思，点击屏幕揭晓</div>') +
+      (fShow ? '' : '<div class="im-hint">请回忆单词发音和释义</div><div class="im-subhint">点击屏幕显示答案</div>') +
       '</div>';
   }
   /* 底部操作区：翻面前只显示「显示答案」，翻面后才是三档自评 */
@@ -1769,10 +1825,10 @@ function renderFlash() {
       gapTxt(fRes.gap) + '</b></div>';
   }
   if (fMode === 'spell') {
-    foot.innerHTML = res + '<div class="im-bar"><button class="wide" data-f="check">提交答案</button><button class="ghost" data-f="skip">跳过</button></div>';
+    foot.innerHTML = res + '<div class="im-bar"><button class="wide" data-f="check">提交答案</button></div>';
   } else if (!fShow && fMode !== 'quiz') {
     /* 墨墨：正面只有单词，先自己回忆；点屏幕或点这里才揭晓释义 */
-    foot.innerHTML = res + '<div class="im-bar"><button class="wide" data-f="show">显示答案</button><button class="ghost" data-f="skip">跳过</button></div>';
+    foot.innerHTML = res + '<div class="im-bar"><button class="wide" data-f="show">显示答案</button></div>';
   } else {
     /* 墨墨式：评价按钮随词态变化——新词「不认识 / 不确定 / 认识」，复习词「忘记 / 模糊 / 认识」 */
     foot.innerHTML = res + '<div class="im-bar">' +
@@ -1783,7 +1839,6 @@ function renderFlash() {
         : '<button class="b0" data-f="0">忘记</button>' +
           '<button class="b1" data-f="1">模糊</button>' +
           '<button class="b2" data-f="2">认识</button>') +
-      '<button class="ghost" data-f="skip">跳过</button></div>' +
       '<span class="im-know-tip">长按「认识」再上滑＝熟知，这个词以后不再复习</span>';
   }
   var card = document.getElementById('imCard');
@@ -1811,8 +1866,30 @@ function renderFlash() {
   }
   bindImmBtns(v);
   bindDots(v);
+  /* 顶部「熟」按钮：一键标为熟知 */
+  var kbtn = document.getElementById('imKnownBtn');
+  if (kbtn && !kbtn._bound) {
+    kbtn._bound = true;
+    kbtn.addEventListener('click', function (e) { e.stopPropagation(); if (v) markKnown(v.w); });
+  }
   /* 翻面后才出现三档自评按钮，此时才绑定「长按认识上滑 = 熟知」手势 */
+  /* 墨墨：点击背面单词进入「单词详情」 */
+  if (fShow) {
+    var wdet = document.getElementById('imWordDetail');
+    if (wdet && !wdet._bound) {
+      wdet._bound = true;
+      wdet.addEventListener('click', function (e) { e.stopPropagation(); openWordDetail(v); });
+    }
+  }
   if (fShow) bindKnownGesture(v);
+}
+function editDefDialog(v) {
+  var cur = defOf(v);
+  var txt = prompt('编辑「' + v.w + '」的释义（留空＝恢复原释义）', cur);
+  if (txt === null) return;
+  setDef(v.w, txt.trim());
+  renderFlash(); renderWords();
+  toast(txt.trim() ? '释义已更新（只改本机）' : '已恢复原释义');
 }
 /* ===== 单词卡右上角三点菜单：删除此词 / 编辑释义（墨墨单词详情页同款） ===== */
 function closeImMenu() {
@@ -1822,7 +1899,8 @@ function closeImMenu() {
 }
 function imMenuEsc(e) { if (e.key === 'Escape') closeImMenu() }
 function bindDots(v) {
-  var dots = document.getElementById('imDots'); if (!dots || !v) return;
+  var dots = document.getElementById('imDots'); if (!dots || !v || dots._bound) return;
+  dots._bound = true;
   dots.addEventListener('click', function (e) {
     e.stopPropagation();
     if (document.getElementById('imMenu')) { closeImMenu(); return }
@@ -1857,14 +1935,7 @@ function bindDots(v) {
         }
         if (a === 'known') { markKnown(v.w); return }
         if (a === 'reset') { setDef(v.w, ''); renderFlash(); toast('已恢复原释义'); return }
-        if (a === 'edit') {
-          var cur = defOf(v);
-          var txt = prompt('编辑「' + v.w + '」的释义（留空＝恢复原释义）', cur);
-          if (txt === null) return;
-          setDef(v.w, txt.trim());
-          renderFlash(); renderWords();
-          toast(txt.trim() ? '释义已更新（只改本机）' : '已恢复原释义');
-        }
+        if (a === 'edit') { editDefDialog(v); }
       });
     });
     /* 点空白处关闭：用捕获阶段，且延后一帧绑定避免本次点击立刻关掉 */
@@ -2022,6 +2093,72 @@ function requeueSameDay(it, from, times) {
     fQ.splice(pos, 0, { v: it.v, p: it.p, neu: 0, nth: (it.nth || 1) + 1 + k });
     inserted++;
   }
+}
+/* 单词详情页：墨墨式，点击背面单词进入（音标/释义/例句/助记/真题/记忆曲线） */
+var wdCur = null;
+function openWordDetail(v) {
+  if (!v) return;
+  wdCur = v;
+  document.body.classList.add('wd-on');
+  renderWordDetail(v);
+}
+function closeWordDetail() {
+  document.body.classList.remove('wd-on');
+  wdCur = null;
+}
+function renderWordDetail(v) {
+  var box = document.getElementById('wdBody'); if (!box) return;
+  var m = memGet(v.w), now = Date.now();
+  var p = m && m.last ? memP(v.w, now) : 0;
+  var h = m && m.h ? m.h : H0;
+  var due = m && m.last ? memDueAt(v.w, now) : now;
+  var days = Math.max(0, Math.round((due - now) / DAYMS));
+  var html = '';
+  html += '<div class="wd-card">' +
+    '<div class="wd-word">' + esc(v.w) + '</div>' +
+    (v.py ? '<div class="wd-py">' + esc(v.py) + '</div>' : '') +
+    '<div class="wd-def">' + esc(defOf(v)) + '</div>' +
+    (v.ex ? '<div class="wd-ex">' + esc(v.ex) + '</div>' : '') +
+    '</div>';
+  html += '<div class="wd-card">' +
+    '<div class="wd-sec-title">记忆数据</div>' +
+    '<div class="wd-stat">' +
+    '<div class="wd-s"><b>' + (m && m.n ? m.n : 0) + '</b><span>复习次数</span></div>' +
+    '<div class="wd-s"><b>' + Math.round(p * 100) + '%</b><span>记忆强度</span></div>' +
+    '<div class="wd-s"><b>' + (Math.round(h * 10) / 10) + '</b><span>半衰期(天)</span></div>' +
+    '<div class="wd-s"><b>' + (days ? days + ' 天' : '今天') + '</b><span>下次复习</span></div>' +
+    '</div>' +
+    '</div>';
+  function row(ic, t, txt) {
+    return '<div class="wd-xr"><span class="wd-ic">' + ic + '</span><div class="wd-xc"><b>' + t + '</b><span>' + esc(txt) + '</span></div></div>';
+  }
+  var mn = '';
+  if (v.rel) mn += row('🌱', '词根', v.rel);
+  if (v.syn) mn += row('🔗', '近义', v.syn);
+  if (v.ph) mn += row('📎', '短语', v.ph);
+  if (v.en) mn += row('🔤', '英释', v.en);
+  if (v.re) mn += row('🎯', '真题', v.re);
+  if (mn) html += '<div class="wd-card"><div class="wd-sec-title">助记</div>' + mn + '</div>';
+  html += '<div class="wd-acts">' +
+    '<button class="wd-known" id="wdKnown">标为熟知</button>' +
+    '<button class="wd-edit" id="wdEdit">编辑释义</button>' +
+    '<button class="wd-del" id="wdDel">删除此词</button>' +
+    '</div>';
+  box.innerHTML = html;
+  document.getElementById('wdClose').onclick = function (e) { e.stopPropagation(); closeWordDetail(); };
+  var k2 = document.getElementById('wdKnown');
+  if (k2) k2.onclick = function () { markKnown(v.w); closeWordDetail(); };
+  var e2 = document.getElementById('wdEdit');
+  if (e2) e2.onclick = function () { closeWordDetail(); setTimeout(function () { editDefDialog(v); }, 50); };
+  var d2 = document.getElementById('wdDel');
+  if (d2) d2.onclick = function () {
+    if (!confirm('删除「' + v.w + '」？\n\n它不会再出现在背诵流程里。可在「我的 → 已删除的词」中恢复。')) return;
+    for (var i = fQ.length - 1; i >= 0; i--) if (fQ[i].v.w === v.w) fQ.splice(i, 1);
+    delWord(v.w); mm[v.w] = undefined; delete mm[v.w]; msav();
+    if (fIdx >= fQ.length) fIdx = 0;
+    closeWordDetail(); renderFlash(); renderWords(); renderMem(); renderPick(); renderStat();
+    toast('已删除「' + v.w + '」');
+  };
 }
 /* 熟知：长按「认识」上滑触发，永久移出复习队列（可在单词本标记「未学」撤销） */
 function markKnown(w) {
