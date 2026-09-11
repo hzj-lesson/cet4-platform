@@ -165,6 +165,35 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 16px 40p
 .ni .nbody{margin-top:4px;font-size:13.8px;line-height:1.9}
 .ni .ndel{margin-top:6px;font-size:11.5px;border:1px solid var(--border);background:#fff;border-radius:7px;padding:2px 8px;cursor:pointer;color:#b91c1c}
 .muted{color:var(--muted);font-size:13.5px}
+
+/* ===== 记忆引擎 ===== */
+.mem-stat{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.mem-stat .ms{flex:1;min-width:84px;background:var(--soft);border-radius:10px;padding:9px 8px;text-align:center}
+.mem-stat .ms b{display:block;font-size:19px;color:var(--primary);line-height:1.35;font-variant-numeric:tabular-nums}
+.mem-stat .ms span{font-size:11.5px;color:var(--muted)}
+.mem-dist{display:flex;align-items:flex-end;gap:5px;height:78px;margin:8px 0 0}
+.mem-dist .bd{flex:1;background:var(--soft);border-radius:5px 5px 0 0;position:relative;height:100%;display:flex;align-items:flex-end}
+.mem-dist .bd i{display:block;width:100%;background:linear-gradient(180deg,var(--primary),#8b85f7);border-radius:5px 5px 0 0;min-height:2px}
+.mem-dist .bd em{position:absolute;top:-15px;left:0;right:0;text-align:center;font-size:10px;font-style:normal;color:var(--muted)}
+.mem-x{display:flex;gap:5px;font-size:10px;color:var(--muted);text-align:center;margin-top:3px}
+.mem-x span{flex:1}
+.mem-fore{display:flex;gap:4px;margin-top:8px}
+.mem-fore .fd{flex:1;text-align:center}
+.mem-fore .fd b{display:block;height:42px;background:var(--soft);border-radius:6px;position:relative;overflow:hidden}
+.mem-fore .fd b i{position:absolute;left:0;right:0;bottom:0;display:block;background:linear-gradient(180deg,var(--primary-2),#67c7dd)}
+.mem-fore .fd span{font-size:10px;color:var(--muted);line-height:1.5}
+.mem-set{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:14px;font-size:12.5px;color:var(--muted)}
+.mem-set .tab{padding:4px 10px;font-size:12px}
+.mem-bar{height:4px;background:var(--soft);border-radius:3px;overflow:hidden;margin-top:7px}
+.mem-bar i{display:block;height:100%;background:var(--primary);border-radius:3px;transition:width .3s}
+.pbadge{font-size:11px;padding:1px 7px;border-radius:20px;background:var(--soft);color:var(--muted);margin-left:6px;white-space:nowrap}
+.pbadge.hi{background:#dcfce7;color:#15803d}
+.pbadge.mid{background:#fef3c7;color:#b45309}
+.pbadge.lo{background:#fee2e2;color:#b91c1c}
+.fmeta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:10px}
+.fmeta b{color:var(--primary)}
+.fres{margin-top:12px;padding:10px 12px;background:var(--soft);border-radius:10px;font-size:12.5px;line-height:1.95}
+.fres b{color:var(--primary)}
 </style>
 </head>
 <body>
@@ -359,7 +388,9 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 16px 40p
         <span id="wordCount" class="muted"></span>
       </div>
     </div>
-    <h2 class="sec">🃏 闪卡复习</h2>
+    <h2 class="sec">🧠 记忆引擎 · 半衰期调度</h2>
+    <div class="card" id="memBox"></div>
+    <h2 class="sec">🃏 智能复习队列</h2>
     <div class="card">
       <div id="flashBox"></div>
       <button class="tab" id="newFlashBtn" style="margin-top:12px">🔀 换一批</button>
@@ -511,6 +542,7 @@ tabs.addEventListener("click",function(e){
   var b=e.target.closest(".tab");if(!b)return;
   document.querySelectorAll(".tab").forEach(function(t){t.classList.toggle("on",t===b)});
   document.querySelectorAll(".panel").forEach(function(p){p.classList.toggle("on",p.id===b.dataset.p)});
+  if(b.dataset.p==="p8"){ if(typeof renderMem==="function") renderMem(); if(typeof renderWords==="function") renderWords() }
   window.scrollTo({top:0,behavior:"smooth"});
 });
 
@@ -728,6 +760,94 @@ var vm = {};   try { vm = JSON.parse(localStorage.getItem(VKEY)) || {} } catch (
 var notes = []; try { notes = JSON.parse(localStorage.getItem(NKEY)) || [] } catch (e) { notes = [] }
 function vsave() { try { localStorage.setItem(VKEY, JSON.stringify(vm)) } catch (e) { } }
 function nsave() { try { localStorage.setItem(NKEY, JSON.stringify(notes)) } catch (e) { } }
+
+/* ================= 记忆引擎 · 半衰期调度 =================
+   每个单词维护 3 个内部变量：
+     h    半衰期(天)：回忆概率从 100% 衰减到 50% 所需时间 = 记忆的"存储强度"
+     d    难度(0~1)：同等条件下半衰期涨得越慢，词越难
+     last 上次复习时间戳(ms)，0 = 从未学过
+   回忆概率   p = 2^(-Δt / h)                     指数遗忘曲线
+   复习成功   h' = h × (1 + A×(1-p)×(1-0.5d))     ★核心：复习时 p 越低，成功后半衰期涨得越多
+                                                  （合意困难 desirable difficulty）
+   下次间隔   gap = h × -log2(目标保留率)          保留率 0.85 → gap ≈ 0.234h
+   建模思路取自墨墨公开论文（ACM SIGKDD'22 / IEEE TKDE'23），此处做了可离线运行的简化。
+========================================================== */
+var MKEY = 'cet4_mem_v1', CKEY = 'cet4_memcfg_v1', DKEY = 'cet4_memday_v1';
+var DAYMS = 86400000, H0 = 1.0, HMIN = 0.4, HMAX = 400, GAIN = 6.0;
+var mcfg = {}; try { mcfg = JSON.parse(localStorage.getItem(CKEY)) || {} } catch (e) { mcfg = {} }
+var MRT = (typeof mcfg.rt === 'number') ? mcfg.rt : 0.85;      /* 目标保留率 */
+var NEWCAP = (typeof mcfg.cap === 'number') ? mcfg.cap : 20;   /* 每日新词上限 */
+function csav() { try { localStorage.setItem(CKEY, JSON.stringify({ rt: MRT, cap: NEWCAP })) } catch (e) { } }
+var mm = {}; try { mm = JSON.parse(localStorage.getItem(MKEY)) || {} } catch (e) { mm = {} }
+function msav() { try { localStorage.setItem(MKEY, JSON.stringify(mm)) } catch (e) { } }
+var mday = {}; try { mday = JSON.parse(localStorage.getItem(DKEY)) || {} } catch (e) { mday = {} }
+function dsav() { try { localStorage.setItem(DKEY, JSON.stringify(mday)) } catch (e) { } }
+function dayRec() { var k = fmtD(new Date()); if (mday.k !== k) mday = { k: k, neu: 0, ok: 0, fail: 0 }; return mday }
+function memGet(w) {
+  var m = mm[w];
+  if (!m || typeof m !== 'object') m = mm[w] = { h: H0, d: 0.3, last: 0, n: 0, ok: 0, fail: 0 };
+  if (typeof m.h !== 'number' || !isFinite(m.h)) m.h = H0;
+  if (typeof m.d !== 'number' || !isFinite(m.d)) m.d = 0.3;
+  return m;
+}
+function memP(w, now) {                       /* 当前记忆持久度 0~1 */
+  var m = memGet(w); if (!m.last) return 0;
+  var dt = (now - m.last) / DAYMS; if (dt <= 0) return 1;
+  return Math.pow(2, -dt / m.h);
+}
+function memGap(m) { return m.h * -Math.log(MRT) / Math.LN2 }          /* 天 */
+function memDueAt(w, now) { var m = memGet(w); return m.last ? m.last + memGap(m) * DAYMS : 0 }
+function memReview(w, g, now) {               /* g: 2记住 1模糊 0忘记 */
+  var m = memGet(w), p = memP(w, now), h0 = m.h;
+  if (g === 2) {
+    m.h = Math.min(HMAX, Math.max(HMIN, m.h * (1 + GAIN * (1 - p) * (1 - 0.5 * m.d))));
+    m.d = Math.max(0, m.d - 0.04); m.ok++;
+  } else if (g === 1) {
+    m.h = Math.min(HMAX, Math.max(HMIN, m.h * (1 + GAIN * 0.35 * (1 - p) * (1 - 0.5 * m.d))));
+    m.d = Math.min(1, m.d + 0.03); m.fail++;
+  } else {
+    m.h = Math.max(HMIN, m.h * 0.4); m.d = Math.min(1, m.d + 0.12); m.fail++;
+  }
+  m.last = now; m.n++;
+  var dr = dayRec(); if (g === 2) dr.ok++; else dr.fail++; dsav(); msav();
+  return { h0: h0, h: m.h, d: m.d, p: p, gap: memGap(m) };
+}
+function memSetLevel(w, lv) {                 /* 列表里手动标记 → 同步写入记忆状态 */
+  var m = memGet(w), now = Date.now(), H = [0, 2, 15, 60];
+  if (lv === 0) { m.last = 0; m.h = H0; m.d = 0.3; }
+  else { m.h = H[lv]; m.d = Math.max(0, 0.5 - lv * 0.12); if (!m.last) m.last = now; }
+  msav();
+}
+function gapTxt(days) {
+  if (days < 1 / 24) return Math.max(1, Math.round(days * 1440)) + ' 分钟后';
+  if (days < 1) return Math.round(days * 24) + ' 小时后';
+  if (days < 30) return (Math.round(days * 10) / 10) + ' 天后';
+  return Math.round(days / 30) + ' 个月后';
+}
+function pCls(p, m) { return (m && m.last) ? (p >= 0.7 ? 'hi' : (p >= 0.4 ? 'mid' : 'lo')) : '' }
+/* 预测「每次都记住且按时复习」时的间隔序列，用于给用户看当前设置的强度（无副作用） */
+function predictGaps(rt) {
+  var h = H0, d = 0.3, out = [];
+  for (var i = 0; i < 8; i++) {
+    var p = (i === 0 ? 0 : rt);
+    h = Math.min(HMAX, Math.max(HMIN, h * (1 + GAIN * (1 - p) * (1 - 0.5 * d))));
+    d = Math.max(0, d - 0.04);
+    out.push(Math.round(h * -Math.log(rt) / Math.LN2 * 10) / 10);
+  }
+  return out;
+}
+/* 历史数据迁移：把旧的 4 档掌握度(vm)折算成半衰期 */
+function memMigrate() {
+  if (mcfg.mig) return;
+  var now = Date.now(), H = [0, 2, 15, 60], c = 0;
+  Object.keys(vm).forEach(function (w) {
+    var lv = +vm[w] || 0; if (!lv || mm[w]) return;
+    mm[w] = { h: H[lv], d: Math.max(0, 0.5 - lv * 0.12), last: now, n: lv, ok: lv > 1 ? 1 : 0, fail: 0 };
+    c++;
+  });
+  mcfg.mig = 1; csav(); if (c) msav();
+  return c;
+}
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }
 var MAST = ['未学', '学习中', '能运用', '已精通'];
 var LVLNAME = { 0: 'CET-4', 1: 'CET-6', 2: '通用' };
@@ -780,15 +900,19 @@ function wList() {
 function renderWords() {
   var box = document.getElementById('wordBox'); if (!box) return;
   var list = wList(), h = '';
+  var NOW = Date.now();
   list.forEach(function (v) {
-    var mk = vm[v.w] || 0;
+    var mk = vm[v.w] || 0, mw = mm[v.w], pp = (mw && mw.last) ? memP(v.w, NOW) : 0;
+    var pcls = pCls(pp, mw), ptxt = (mw && mw.last) ? (Math.round(pp * 100) + '%') : '新';
     h += '<div class="wi" data-w="' + esc(v.w) + '">' +
       '<div class="ww"><b>' + esc(v.w) + '</b>' +
       (v.py ? '<span class="py">' + esc(v.py) + '</span>' : '') +
       '<span class="lvl l' + v.lvl + '">' + LVLNAME[v.lvl] + '</span>' +
-      '<span class="mst m' + mk + '">' + MAST[mk] + '</span></div>' +
+      '<span class="mst m' + mk + '">' + MAST[mk] + '</span>' +
+      '<span class="pbadge ' + pcls + '">' + ptxt + '</span></div>' +
       '<div class="wm">' + esc(v.m) + '</div>' +
       (v.ex ? '<div class="we">' + esc(v.ex) + '</div>' : '') +
+      '<div class="mem-bar"><i style="width:' + Math.round(pp * 100) + '%"></i></div>' +
       '<div class="wbtns"><button data-a="0">未学</button><button data-a="1">学习中</button><button data-a="2">能运用</button><button data-a="3">已精通</button></div>' +
       '</div>';
   });
@@ -797,40 +921,146 @@ function renderWords() {
   box.querySelectorAll('.wbtns button').forEach(function (b) {
     b.addEventListener('click', function () {
       var w = b.closest('.wi').getAttribute('data-w');
-      vm[w] = +b.getAttribute('data-a'); vsave(); renderWords();
+      var lv = +b.getAttribute('data-a'); vm[w] = lv; vsave(); memSetLevel(w, lv);
+      updateWordRow(w); renderMem();
       if (typeof toast === 'function') toast('已标记：' + MAST[vm[w]]);
     });
   });
 }
-/* ---------- 闪卡 ---------- */
-var fList = [], fIdx = 0, fShow = false;
-function newFlash() {
-  fList = wList().slice();
-  if (!fList.length) { document.getElementById('flashBox').innerHTML = '<div class="muted">当前筛选没有单词</div>'; return }
-  fIdx = Math.floor(Math.random() * fList.length); fShow = false; renderFlash();
+/* ---------- 智能复习队列（半衰期调度） ---------- */
+var fQ = [], fIdx = 0, fShow = false, fRes = null;
+function buildQ() {
+  var now = Date.now(), due = [], neu = [];
+  wList().forEach(function (v) {
+    var m = mm[v.w];
+    if (!m || !m.last) { neu.push({ v: v, p: 0, neu: 1 }); return }
+    var p = memP(v.w, now); if (p < MRT) due.push({ v: v, p: p, neu: 0 });
+  });
+  due.sort(function (a, b) { return a.p - b.p });          /* 最先要忘的排最前面 */
+  var d = dayRec(), cap = Math.max(0, NEWCAP - d.neu);
+  fQ = due.concat(neu.slice(0, cap)); fIdx = 0;
 }
+function newFlash() { buildQ(); fRes = null; renderFlash() }
 function renderFlash() {
-  var box = document.getElementById('flashBox'); if (!box || !fList.length) return;
-  var v = fList[fIdx], mk = vm[v.w] || 0;
-  box.innerHTML = '<div class="flash' + (fShow ? ' show' : '') + '" id="flashCard">' +
+  var box = document.getElementById('flashBox'); if (!box) return;
+  if (!fQ.length) {
+    var now = Date.now(), next = null, best = 1e18;
+    wList().forEach(function (v) {
+      var m = mm[v.w];
+      if (m && m.last) { var t = memDueAt(v.w, now) - now; if (t > 0 && t < best) { best = t; next = v.w } }
+    });
+    var unl = wList().filter(function (v) { return !(mm[v.w] && mm[v.w].last) }).length;
+    var dR = dayRec(), capLeft = Math.max(0, NEWCAP - dR.neu);
+    box.innerHTML = '<div style="text-align:center;padding:24px 12px">' +
+      '<div style="font-size:40px">🎉</div>' +
+      '<div style="font-weight:700;margin-top:6px">今天的复习清空了</div>' +
+      '<div class="muted" style="font-size:13px;margin-top:6px;line-height:1.9">' +
+      (next ? '下一个到期：<b>' + esc(next) + '</b>（' + gapTxt(best / DAYMS) + '）'
+            : (unl && capLeft === 0 ? '还有 ' + unl + ' 个新词，但今日新词额度（' + NEWCAP + '）已用完<br>可在上方把「每日新词」调高，或明天继续'
+              : (unl ? '还有 ' + unl + ' 个新词没学，点下面「再来一批」' : '全部单词都已进入长期记忆 ✅'))) +
+      '</div></div>';
+    return;
+  }
+  if (fIdx >= fQ.length) fIdx = 0;
+  var it = fQ[fIdx], v = it.v, now = Date.now();
+  var isNew = !!it.neu, p = isNew ? 0 : memP(v.w, now);
+  var h = '<div class="fmeta"><span>' + (isNew ? '🆕 新词' : '🔁 复习') + '</span>' +
+    '<span>进度 ' + (fIdx + 1) + ' / ' + fQ.length + '</span>' +
+    (isNew ? '' : '<span>当前持久度 <b>' + Math.round(p * 100) + '%</b></span>') +
+    (isNew ? '' : '<span>第 ' + (memGet(v.w).n + 1) + ' 次复习</span>') + '</div>';
+  h += '<div class="flash' + (fShow ? ' show' : '') + '" id="flashCard">' +
     '<div class="fw">' + esc(v.w) + '</div>' +
-    (fShow ? '<div class="fp">' + esc(v.py || '') + '</div><div class="fm">' + esc(v.m) + '</div><div class="fe">' + esc(v.ex || '') + '</div>' : '<div class="fhint">点击卡片翻面看释义</div>') +
-    '</div>' +
-    '<div class="fbtns"><button data-f="0">😶 没记住</button><button data-f="1">🤔 模糊</button><button data-f="3">😎 已记住</button><button class="ghost" data-f="next">下一个 →</button></div>' +
-    '<div style="font-size:12px;color:var(--muted);margin-top:6px">当前掌握：' + MAST[mk] + ' · 剩余 ' + fList.length + ' 词</div>';
-  var card = document.getElementById('flashCard');
-  card.addEventListener('click', function () { fShow = !fShow; renderFlash() });
+    (fShow ? '<div class="fp">' + esc(v.py || '') + '</div><div class="fm">' + esc(v.m) + '</div><div class="fe">' + esc(v.ex || '') + '</div>'
+           : '<div class="fhint">点击卡片翻面看释义</div>') + '</div>';
+  h += '<div class="fbtns"><button data-f="0">😵 忘记</button><button data-f="1">🤔 模糊</button><button data-f="2">😎 记住</button><button class="ghost" data-f="skip">跳过 →</button></div>';
+  if (fRes) {
+    var pct = Math.round((fRes.h / fRes.h0 - 1) * 100);
+    h += '<div class="fres"><b>' + esc(fRes.w) + '</b>　半衰期 <b>' + (Math.round(fRes.h0 * 10) / 10) +
+      ' 天</b> → <b>' + (Math.round(fRes.h * 10) / 10) + ' 天</b>（' + (pct >= 0 ? '+' : '') + pct + '%）<br>' +
+      '复习时回忆概率 <b>' + Math.round(fRes.p * 100) + '%</b>' +
+      (fRes.p < 0.6 ? '（拖到快忘才复习，涨得最多 ✅）' : '') +
+      ' · 下次约 <b>' + gapTxt(fRes.gap) + '</b></div>';
+  }
+  box.innerHTML = h;
+  document.getElementById('flashCard').addEventListener('click', function () { fShow = !fShow; renderFlash() });
   box.querySelectorAll('.fbtns button').forEach(function (b) {
     b.addEventListener('click', function (ev) {
       ev.stopPropagation();
       var a = b.getAttribute('data-f');
-      if (a === 'next') { fShow = false; fIdx = (fIdx + 1) % fList.length; renderFlash(); return }
-      vm[v.w] = +a; vsave();
-      if (typeof toast === 'function') toast('已标记：' + MAST[+a]);
-      fShow = false; fIdx = Math.floor(Math.random() * fList.length); renderFlash();
+      if (a === 'skip') { fShow = false; fRes = null; fQ.splice(fIdx, 1); if (fIdx >= fQ.length) fIdx = 0; renderFlash(); return }
+      var g = +a, w = v.w, wasNew = !(mm[w] && mm[w].last);
+      var r = memReview(w, g, Date.now());
+      if (wasNew && g > 0) { var dr = dayRec(); dr.neu++; dsav() }
+      vm[w] = (g === 2 ? 3 : (g === 1 ? 2 : 1)); vsave();
+      fRes = { w: w, h0: r.h0, h: r.h, p: r.p, gap: r.gap };
+      fShow = false; fQ.splice(fIdx, 1); if (fIdx >= fQ.length) fIdx = 0;
+      renderFlash(); renderMem(); updateWordRow(w);
+      if (typeof toast === 'function') toast(g === 2 ? '✅ 记住了，间隔拉长' : (g === 1 ? '🤔 模糊，明天再来' : '😵 半衰期腰斩，难度上调'));
     });
   });
 }
+/* 只更新列表里的单行，避免 669 词全量重渲染 */
+function updateWordRow(w) {
+  var row = document.querySelector('#wordBox .wi[data-w="' + w + '"]'); if (!row) { renderWords(); return }
+  var now = Date.now(), m = mm[w], p = (m && m.last) ? memP(w, now) : 0;
+  var pb = row.querySelector('.pbadge');
+  if (pb) { pb.className = 'pbadge ' + pCls(p, m); pb.textContent = (m && m.last) ? (Math.round(p * 100) + '%') : '新' }
+  var bar = row.querySelector('.mem-bar i'); if (bar) bar.style.width = Math.round(p * 100) + '%';
+  var ms = row.querySelector('.mst');
+  if (ms) { ms.className = 'mst m' + (vm[w] || 0); ms.textContent = MAST[vm[w] || 0] }
+}
+/* ---------- 记忆持久度面板 ---------- */
+function renderMem() {
+  var box = document.getElementById('memBox'); if (!box) return;
+  var now = Date.now(), list = wList(), tot = list.length;
+  var learned = 0, dueN = 0, sum = 0, strong = 0, bk = [0, 0, 0, 0, 0, 0], fore = [0, 0, 0, 0, 0, 0, 0];
+  list.forEach(function (v) {
+    var m = mm[v.w]; if (!m || !m.last) return;
+    learned++;
+    var p = memP(v.w, now); sum += p;
+    bk[Math.min(5, Math.floor(p * 6))]++;
+    if (m.h >= 30) strong++;
+    if (p < MRT) dueN++;
+    else { var dd = Math.floor((memDueAt(v.w, now) - now) / DAYMS); if (dd >= 0 && dd < 7) fore[dd]++ }
+  });
+  var avg = learned ? sum / learned : 0, d = dayRec();
+  var maxB = Math.max.apply(null, bk.concat([1])), maxF = Math.max.apply(null, fore.concat([1]));
+  var h = '<div class="mem-stat">' +
+    '<div class="ms"><b>' + learned + '</b><span>已学 / ' + tot + ' 词</span></div>' +
+    '<div class="ms"><b style="color:var(--warn)">' + dueN + '</b><span>今日待复习</span></div>' +
+    '<div class="ms"><b>' + Math.round(avg * 100) + '%</b><span>平均持久度</span></div>' +
+    '<div class="ms"><b>' + strong + '</b><span>长期记忆 ≥30天</span></div>' +
+    '<div class="ms"><b>' + (d.ok + d.fail) + '</b><span>今日已练</span></div></div>';
+  h += '<div style="font-size:12.5px;color:var(--muted)">记忆持久度分布（已学 ' + learned + ' 词）</div>';
+  h += '<div class="mem-dist">';
+  for (var i = 0; i < 6; i++) h += '<div class="bd"><em>' + (bk[i] || '') + '</em><i style="height:' + Math.round(bk[i] / maxB * 100) + '%"></i></div>';
+  h += '</div><div class="mem-x">';
+  ['0-17', '17-33', '33-50', '50-67', '67-83', '83-100'].forEach(function (t) { h += '<span>' + t + '%</span>' });
+  h += '</div>';
+  h += '<div style="font-size:12.5px;color:var(--muted);margin-top:12px">未来 7 天复习量预测</div><div class="mem-fore">';
+  for (var i = 0; i < 7; i++) {
+    h += '<div class="fd"><b><i style="height:' + Math.round(fore[i] / maxF * 100) + '%"></i></b><span>' +
+      (i === 0 ? '今天' : (i === 1 ? '明天' : '+' + i)) + '<br>' + fore[i] + '</span></div>';
+  }
+  h += '</div>';
+  h += '<div class="mem-set"><span>目标保留率</span>';
+  [0.8, 0.85, 0.9, 0.95].forEach(function (r) { h += '<button class="tab mrt' + (MRT === r ? ' on' : '') + '" data-r="' + r + '">' + Math.round(r * 100) + '%</button>' });
+  h += '<span style="margin-left:6px">每日新词</span>';
+  [10, 20, 30, 50].forEach(function (c) { h += '<button class="tab mcap' + (NEWCAP === c ? ' on' : '') + '" data-c="' + c + '">' + c + '</button>' });
+  h += '</div>';
+  h += '<div class="muted" style="font-size:12px;margin-top:8px;line-height:1.9">' +
+    '保留率越低＝复习越懒、省时间但忘得快；越高＝记得牢但每天要背的越多，<b>85% 是性价比拐点</b>。<br>' +
+    '当前设置下，第 1 / 3 / 5 / 8 次复习的间隔约 <b>' + (function () { var g = predictGaps(MRT); return g[0] + ' / ' + g[2] + ' / ' + g[4] + ' / ' + g[7] })() + ' 天</b>。<br>' +
+    '算法把「快忘了」的词自动排到最前面：<b>拖到快忘再复习，记住后半衰期涨得最多</b>（合意困难）。</div>';
+  box.innerHTML = h;
+  box.querySelectorAll('.mrt').forEach(function (b) {
+    b.addEventListener('click', function () { MRT = parseFloat(b.getAttribute('data-r')); csav(); renderMem(); newFlash() });
+  });
+  box.querySelectorAll('.mcap').forEach(function (b) {
+    b.addEventListener('click', function () { NEWCAP = parseInt(b.getAttribute('data-c'), 10); csav(); renderMem(); newFlash() });
+  });
+}
+
 /* ---------- 番茄钟 ---------- */
 var pmLeft = 25 * 60, pmTimer = null, pmRun = false, pmMode = 'work';
 var PMMODES = { work: 25 * 60, short: 5 * 60, long: 15 * 60 };
@@ -893,7 +1123,7 @@ function initNotes() {
   });
   var ex = document.getElementById('expAll');
   if (ex) ex.addEventListener('click', function () {
-    var data = { state: state, vocab: vm, notes: notes, quiz: (typeof qz !== 'undefined' ? qz : {}) };
+    var data = { state: state, vocab: vm, mem: mm, notes: notes, quiz: (typeof qz !== 'undefined' ? qz : {}) };
     var blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' });
     var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
     a.download = 'cet-backup-' + fmtD(new Date()) + '.json'; a.click();
@@ -908,8 +1138,9 @@ function initNotes() {
         var d = JSON.parse(fr.result);
         if (d.state) { state = d.state; if (typeof save === 'function') save() }
         if (d.vocab) { vm = d.vocab; vsave() }
+        if (d.mem) { mm = d.mem; msav() }
         if (d.notes) { notes = d.notes; nsave() }
-        renderHeat(); renderWords(); renderNotes();
+        renderHeat(); renderWords(); renderMem(); newFlash(); renderNotes();
         if (typeof refreshProg === 'function') refreshProg();
         if (typeof toast === 'function') toast('✅ 备份已导入');
       } catch (err) { if (typeof toast === 'function') toast('导入失败：文件格式不对') }
@@ -930,7 +1161,8 @@ var wsearch = document.getElementById('wSearch');
 if (wsearch) wsearch.addEventListener('input', function () { wQ = wsearch.value.trim(); renderWords() });
 var nfbtn = document.getElementById('newFlashBtn');
 if (nfbtn) nfbtn.addEventListener('click', newFlash);
-renderHeat(); renderWords(); newFlash(); initPomo(); initNotes();
+memMigrate();
+renderHeat(); renderWords(); renderMem(); newFlash(); initPomo(); initNotes();
 
 </script>
 </body>
