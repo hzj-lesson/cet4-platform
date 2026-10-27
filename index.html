@@ -717,8 +717,26 @@ body.wd-on .wdetail{display:flex}
       </div>
     </div>
 
+    <h2 class="sec">🎯 实战训练</h2>
+    <div class="card" style="display:flex;gap:12px;flex-wrap:wrap">
+      <button onclick="showSub('p14')" style="flex:1;min-width:140px;border:1px solid var(--border);background:var(--soft);color:var(--fg);padding:14px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">📝 翻译实战<br><span style="font-size:12px;font-weight:400;color:var(--muted)">汉译英段落 + 参考译文</span></button>
+      <button onclick="showSub('p15')" style="flex:1;min-width:140px;border:1px solid var(--border);background:var(--soft);color:var(--fg);padding:14px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">✍️ 写作实战<br><span style="font-size:12px;font-weight:400;color:var(--muted)">模板 + 句型 + 范文</span></button>
+    </div>
+
     <h2 class="sec">官方入口</h2>
     <div class="card" id="linksBox"></div>
+  </div>
+
+  <div class="panel" id="p14">
+    <h2 class="sec">📝 翻译实战</h2>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:12px">练习方法：先自己翻译，再点「显示参考译文」对照，重点看采分点。以下为通用模拟练习，非历年真题。</div>
+    <div id="transBox"></div>
+  </div>
+
+  <div class="panel" id="p15">
+    <h2 class="sec">✍️ 写作实战</h2>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:12px">先背熟框架与句型，再动笔写模拟题，写完后点「显示范文」对比。以下为通用模拟练习，非历年真题。</div>
+    <div id="writingBox"></div>
   </div>
 
   <div class="panel on" id="p8">
@@ -1080,6 +1098,8 @@ function showSub(pid){
   if(pid==="p8"){ if(typeof renderMem==="function") renderMem(); if(typeof renderWords==="function") renderWords(); if(typeof newFlash==="function") newFlash() }
   if(pid==="p10"){ if(typeof renderSign==="function") renderSign(); if(typeof renderSet==="function") renderSet(); if(typeof renderDel==="function") renderDel() }
   if(pid==="p7" && typeof renderQz==="function") renderQz();
+  if(pid==="p14" && typeof renderTrans==="function") renderTrans();
+  if(pid==="p15" && typeof renderWriting==="function") renderWriting();
   if(pid==="p3"){ var kbHost=document.getElementById("kbS1"); if(kbHost && !kbHost.children.length && typeof renderKB==="function") renderKB(KB1,"kbS1","kb1") }
   if(pid==="p1" && typeof renderToday==="function") renderToday();
 }
@@ -3144,6 +3164,68 @@ renderPick(); renderStat();
 setInterval(function () {
   if (document.getElementById('todayHero')) renderToday();
 }, 60000);
+
+
+var TRANS = [{"title": "中秋节（传统文化）", "zh": "中秋节是中国最重要的传统节日之一，通常在农历八月十五庆祝。这一天，家人团聚，一起赏月、吃月饼。月饼象征着团圆与幸福。近年来，越来越多的人通过视频通话与远方的亲人共度佳节。中秋节不仅承载着人们对家庭团聚的渴望，也体现了中国人对自然和美好生活的热爱。", "en": "The Mid-Autumn Festival is one of the most important traditional festivals in China, usually celebrated on the 15th day of the eighth lunar month. On this day, families gather together to admire the full moon and eat mooncakes. Mooncakes symbolize reunion and happiness. In recent years, a growing number of people have celebrated this festival with distant relatives through video calls. The Mid-Autumn Festival not only carries people's longing for family reunion, but also reflects Chinese people's love for nature and a better life.", "points": ["“农历八月十五” → the 15th day of the eighth lunar month", "“象征着” → symbolize（主语 mooncakes 为复数，谓语用 symbolize）", "“不仅……也……” → not only... but also... 句型", "“对……的渴望” → longing for..."]}, {"title": "移动支付（社会发展）", "zh": "过去十年里，移动支付在中国得到了迅速普及。如今，无论是大型商场还是街边小摊，人们都可以用手机完成付款。这种便捷的支付方式不仅节省了时间，也减少了现金交易带来的风险。可以说，移动支付已经深刻改变了中国人的生活习惯。", "en": "Over the past decade, mobile payment has been rapidly adopted in China. Today, whether in large shopping malls or at small roadside stalls, people can make payments with their mobile phones. This convenient payment method not only saves time, but also reduces the risks associated with cash transactions. It can be said that mobile payment has profoundly changed the living habits of Chinese people.", "points": ["“过去十年里” → Over the past decade", "“无论是……还是……” → whether... or...", "“得到了迅速普及” → has been rapidly adopted（被动）/ has spread rapidly", "“可以说” → It can be said that..."]}, {"title": "高铁（科技成就）", "zh": "中国的高铁网络是世界上规模最大的。它以其高速度、高安全性和准点率而闻名。乘坐高铁，旅客可以在几个小时内从一座大城市抵达另一座大城市。高铁的发展不仅方便了人们的出行，也促进了沿线城市的经济发展。", "en": "China's high-speed railway network is the largest in the world. It is well known for its high speed, high safety and punctuality. By taking the high-speed train, passengers can travel from one big city to another within a few hours. The development of high-speed railways has not only made people's travel more convenient, but also promoted the economic growth of cities along the lines.", "points": ["“以……而闻名” → be well known for... / be famous for...", "“准点率” → punctuality", "“在几个小时内” → within a few hours", "“促进……经济发展” → promote the economic growth of..."]}, {"title": "茶文化（传统文化）", "zh": "茶在中国有着悠久的历史，是中华文化的重要组成部分。中国人饮茶的习惯可以追溯到几千年前。在不同的地区，人们泡茶和品茶的方式各不相同。如今，茶不仅是一种饮品，更是一种生活方式，代表着宁静与平和。", "en": "Tea has a long history in China and is an important part of Chinese culture. The Chinese custom of drinking tea can be traced back thousands of years. In different regions, people have different ways of brewing and tasting tea. Today, tea is not only a beverage, but also a way of life, representing tranquility and peace.", "points": ["“悠久的历史” → a long history", "“可以追溯到” → can be traced back to...", "“饮茶的习惯” → the custom of drinking tea", "“代表着” → represent / stand for"]}, {"title": "垃圾分类（环境保护）", "zh": "随着城市的发展，垃圾处理已成为一个严峻的问题。为了更好地保护环境，许多城市开始推行垃圾分类。居民需要将可回收物、厨余垃圾和其他垃圾分开投放。这一举措虽然给生活带来一些不便，但从长远来看有利于可持续发展。", "en": "With the development of cities, waste disposal has become a serious problem. In order to better protect the environment, many cities have begun to implement garbage classification. Residents are required to separate recyclables, kitchen waste and other garbage before disposal. Although this measure brings some inconvenience to daily life, it is beneficial to sustainable development in the long run.", "points": ["“随着……” → With the development of...", "“推行垃圾分类” → implement garbage classification", "“可回收物 / 厨余垃圾” → recyclables / kitchen waste", "“从长远来看” → in the long run"]}, {"title": "在线教育（教育科技）", "zh": "近年来，在线教育在中国快速发展，尤其在疫情期间发挥了重要作用。学生可以通过网络课程随时随地学习，不再受时间和地点的限制。然而，长时间面对屏幕也会影响视力与身体健康。因此，合理安排学习时间十分必要。", "en": "In recent years, online education has developed rapidly in China and played an important role especially during the pandemic. Through online courses, students can study anytime and anywhere, no longer limited by time and place. However, staring at screens for long periods may also affect their eyesight and physical health. Therefore, it is necessary to arrange study time reasonably.", "points": ["“近年来” → In recent years", "“随时随地” → anytime and anywhere", "“不再受……限制” → no longer limited by...", "“合理安排” → arrange... reasonably"]}];
+var WRITING = {"templates": [{"h": "开头段（引出话题 + 表明观点）", "b": "Nowadays, ... has become a hot topic of public concern. / With the development of..., an increasing number of people begin to... / Different people hold different opinions on..."}, {"h": "主体段（分点论证，2—3 个理由 / 利弊）", "b": "First and foremost, ... / What's more, ... / Last but not least, ...（每段一个中心句 + 解释 + 例子）"}, {"h": "结尾段（总结 + 建议 / 展望）", "b": "In conclusion, ... / Only by... can we... / It is high time that we took action."}], "sentences": [{"cat": "开头", "items": ["Nowadays, it is widely believed that...", "With the rapid development of..., ... has aroused wide concern.", "When it comes to..., opinions vary from person to person."]}, {"cat": "过渡 / 列举", "items": ["First and foremost, ...", "What's more / Moreover, ...", "Last but not least, ..."]}, {"cat": "因果", "items": ["The reason why... is that...", "As a result / Therefore, ..."]}, {"cat": "对比", "items": ["While some people prefer..., others tend to...", "On the one hand... On the other hand..."]}, {"cat": "举例", "items": ["A good case in point is...", "For instance / For example, ..."]}, {"cat": "结论", "items": ["In conclusion / To sum up, ...", "Only by taking these measures can we...", "It is high time that we took action."]}], "topics": [{"title": "The Advantages and Disadvantages of Online Learning（在线学习的利弊）", "outline": "现象引入 → 好处（便捷 / 灵活）→ 问题（自律 / 视力健康）→ 总结", "model": "Nowadays, with the rapid development of the Internet, online learning has become increasingly popular among students. Like a coin with two sides, it brings both benefits and drawbacks.\n\nOn the one hand, online learning offers great convenience and flexibility. Students can study anytime and anywhere without being limited by time or place, and they can review difficult parts repeatedly. On the other hand, it also poses some problems. Staring at screens for long hours may harm students' eyesight, and without face-to-face supervision, some students lack self-discipline.\n\nIn conclusion, online learning is a useful tool, but we should use it wisely. Reasonable schedules and self-control are the keys to making the best of it."}, {"title": "The Importance of Preserving Traditional Culture（保护传统文化）", "outline": "传统文化价值 → 消失风险 → 保护措施（政府 / 个人）", "model": "Traditional culture is the root of a nation's identity and an invaluable treasure handed down from our ancestors. However, with the spread of globalization, some traditional customs and crafts are gradually disappearing.\n\nIt is of great importance to preserve traditional culture. First, it helps younger generations understand where they come from and strengthens their sense of belonging. Moreover, traditional culture contributes to cultural diversity in the world. Therefore, both the government and individuals should take action. We can protect it by holding cultural festivals, opening museums, and passing skills to the young.\n\nIn conclusion, preserving traditional culture is not only about the past, but also about our future."}, {"title": "Part-time Jobs for College Students（大学生兼职）", "outline": "现象 → 好处（实践经验 / 独立）→ 注意（学业优先）", "model": "Nowadays, an increasing number of college students choose to take part-time jobs in their spare time. This phenomenon has aroused public attention.\n\nTaking a part-time job brings several benefits. First and foremost, it enables students to gain practical experience and learn skills that cannot be taught in classrooms. Besides, earning their own money helps them become more independent. However, students should remember that academic study is their primary task. They must balance work and study properly.\n\nIn conclusion, part-time jobs are valuable if students arrange their time wisely and never let work affect their studies."}, {"title": "Living a Low-carbon Life（低碳生活）", "outline": "环保必要性 → 日常低碳做法 → 呼吁行动", "model": "With the global climate changing, living a low-carbon life has become an urgent task for everyone. A low-carbon lifestyle means reducing energy consumption and carbon emissions in daily life.\n\nThere are many simple things we can do. For instance, we can take public transport instead of driving, turn off lights when leaving a room, and use reusable bags instead of plastic ones. Small actions, if practiced by all, will make a big difference.\n\nIn conclusion, protecting the environment is everyone's responsibility. Only by forming low-carbon habits can we leave a greener world to future generations."}, {"title": "The Impact of Technology on Our Lives（科技对生活的影响）", "outline": "便利 → 问题（依赖 / 人际弱化）→ 正确态度", "model": "Technology has transformed our lives in ways we could hardly imagine a few decades ago. It brings us great convenience, from instant communication to smart homes.\n\nHowever, technology also has its downsides. Many people, especially the young, are becoming overly dependent on their phones, which weakens face-to-face communication. Some even feel anxious without their devices.\n\nIn my view, technology itself is neutral. What matters is how we use it. We should enjoy its benefits while avoiding addiction, and remember that real relationships matter more than virtual ones."}, {"title": "The Importance of a Healthy Diet（健康饮食）", "outline": "健康饮食定义 → 好处 → 建议", "model": "A healthy diet, which means eating a balanced variety of nutritious food, plays a vital role in our well-being. Unfortunately, many young people now rely on fast food and irregular meals.\n\nThe benefits of a healthy diet are obvious. It provides the energy we need, strengthens our immune system, and helps prevent diseases such as obesity and diabetes. In contrast, poor eating habits do great harm to our bodies.\n\nTherefore, we should develop good eating habits: have regular meals, eat more vegetables and fruit, and drink enough water. As the saying goes, health is the foundation of everything."}]};
+
+/* ================= 翻译实战 / 写作实战 渲染 ================= */
+function renderTrans(){
+  var box=document.getElementById('transBox');
+  if(!box||typeof TRANS==='undefined'||box.dataset.done)return;
+  box.dataset.done='1';
+  var html='';
+  TRANS.forEach(function(t,idx){
+    html+='<div class="card" style="margin-bottom:16px">'
+        +'<div style="font-weight:800;font-size:16px;margin-bottom:8px;color:var(--fg)">'+(idx+1)+'. '+esc(t.title)+'</div>'
+        +'<div style="font-size:13.5px;line-height:1.9;color:var(--fg);background:var(--soft);padding:12px 14px;border-radius:10px;margin-bottom:10px">'+esc(t.zh)+'</div>'
+        +'<button onclick="toggleTrans('+idx+')" id="tbtn'+idx+'" style="border:1px solid var(--border);background:var(--soft);color:var(--fg);padding:7px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit">显示参考译文</button>'
+        +'<div id="tans'+idx+'" style="display:none;margin-top:10px">'
+        +'<div style="font-size:13.5px;line-height:1.9;color:var(--fg)"><b>参考译文：</b><br>'+esc(t.en)+'</div>'
+        +'<div style="margin-top:10px;font-size:13px;line-height:1.8;color:var(--muted)"><b>采分点：</b><ul style="margin:6px 0 0;padding-left:20px">'
+        + t.points.map(function(p){return '<li style="margin-bottom:4px">'+esc(p)+'</li>';}).join('')
+        +'</ul></div></div></div>';
+  });
+  box.innerHTML=html;
+}
+function toggleTrans(i){
+  var d=document.getElementById('tans'+i), b=document.getElementById('tbtn'+i);
+  if(!d||!b)return;
+  if(d.style.display==='none'){d.style.display='block';b.textContent='隐藏参考译文';}
+  else{d.style.display='none';b.textContent='显示参考译文';}
+}
+function renderWriting(){
+  var box=document.getElementById('writingBox');
+  if(!box||typeof WRITING==='undefined'||box.dataset.done)return;
+  box.dataset.done='1';
+  var h='';
+  h+='<div class="card"><div style="font-weight:800;font-size:16px;margin-bottom:10px;color:var(--fg)">📐 三段式万能框架</div>';
+  WRITING.templates.forEach(function(s){
+    h+='<div style="font-size:13.5px;line-height:1.9;color:var(--fg);margin-bottom:6px"><b>'+esc(s.h)+'</b>：'+esc(s.b)+'</div>';
+  });
+  h+='</div>';
+  h+='<div class="card"><div style="font-weight:800;font-size:16px;margin-bottom:10px;color:var(--fg)">💡 高频句型库</div>';
+  WRITING.sentences.forEach(function(g){
+    h+='<div style="font-weight:700;font-size:13.5px;margin:8px 0 4px;color:var(--muted)">'+esc(g.cat)+'</div>';
+    g.items.forEach(function(it){ h+='<div style="font-size:13px;line-height:1.8;color:var(--fg);padding-left:10px">• '+esc(it)+'</div>'; });
+  });
+  h+='</div>';
+  WRITING.topics.forEach(function(tp,idx){
+    h+='<div class="card" style="margin-bottom:16px">'
+     +'<div style="font-weight:800;font-size:15px;margin-bottom:8px;color:var(--fg)">✍️ 模拟题 '+(idx+1)+'</div>'
+     +'<div style="font-size:13px;line-height:1.7;color:var(--fg);background:var(--soft);padding:10px 12px;border-radius:10px;margin-bottom:8px">'+esc(tp.title)+'</div>'
+     +'<div style="font-size:12.5px;line-height:1.7;color:var(--muted);margin-bottom:8px"><b>提纲：</b>'+esc(tp.outline)+'</div>'
+     +'<button onclick="toggleModel('+idx+')" id="mbtn'+idx+'" style="border:1px solid var(--border);background:var(--soft);color:var(--fg);padding:7px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit">显示范文</button>'
+     +'<div id="mans'+idx+'" style="display:none;margin-top:10px"><div style="font-size:13px;line-height:1.85;color:var(--fg);white-space:pre-line">'+esc(tp.model)+'</div></div></div>';
+  });
+  box.innerHTML=h;
+}
+function toggleModel(i){
+  var d=document.getElementById('mans'+i), b=document.getElementById('mbtn'+i);
+  if(!d||!b)return;
+  if(d.style.display==='none'){d.style.display='block';b.textContent='隐藏范文';}
+  else{d.style.display='none';b.textContent='显示范文';}
+}
 
 </script>
 </body>
