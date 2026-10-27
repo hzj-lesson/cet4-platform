@@ -721,6 +721,7 @@ body.wd-on .wdetail{display:flex}
     <div class="card" style="display:flex;gap:12px;flex-wrap:wrap">
       <button onclick="showSub('p14')" style="flex:1;min-width:140px;border:1px solid var(--border);background:var(--soft);color:var(--fg);padding:14px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">📝 翻译实战<br><span style="font-size:12px;font-weight:400;color:var(--muted)">汉译英段落 + 参考译文</span></button>
       <button onclick="showSub('p15')" style="flex:1;min-width:140px;border:1px solid var(--border);background:var(--soft);color:var(--fg);padding:14px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">✍️ 写作实战<br><span style="font-size:12px;font-weight:400;color:var(--muted)">模板 + 句型 + 范文</span></button>
+      <button onclick="showSub('p16')" style="flex:1;min-width:140px;border:1px solid var(--border);background:var(--soft);color:var(--fg);padding:14px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">🎯 模考中心<br><span style="font-size:12px;font-weight:400;color:var(--muted)">计时模考 + 错题本</span></button>
     </div>
 
     <h2 class="sec">官方入口</h2>
@@ -737,6 +738,11 @@ body.wd-on .wdetail{display:flex}
     <h2 class="sec">✍️ 写作实战</h2>
     <div style="font-size:13px;color:var(--muted);margin-bottom:12px">先背熟框架与句型，再动笔写模拟题，写完后点「显示范文」对比。以下为通用模拟练习，非历年真题。</div>
     <div id="writingBox"></div>
+  </div>
+
+  <div class="panel" id="p16">
+    <h2 class="sec">🎯 模考中心</h2>
+    <div id="examBox"></div>
   </div>
 
   <div class="panel on" id="p8">
@@ -1100,6 +1106,7 @@ function showSub(pid){
   if(pid==="p7" && typeof renderQz==="function") renderQz();
   if(pid==="p14" && typeof renderTrans==="function") renderTrans();
   if(pid==="p15" && typeof renderWriting==="function") renderWriting();
+  if(pid==="p16" && typeof renderExamHome==="function") renderExamHome();
   if(pid==="p3"){ var kbHost=document.getElementById("kbS1"); if(kbHost && !kbHost.children.length && typeof renderKB==="function") renderKB(KB1,"kbS1","kb1") }
   if(pid==="p1" && typeof renderToday==="function") renderToday();
 }
@@ -3225,6 +3232,192 @@ function toggleModel(i){
   if(!d||!b)return;
   if(d.style.display==='none'){d.style.display='block';b.textContent='隐藏范文';}
   else{d.style.display='none';b.textContent='显示范文';}
+}
+
+/* ================= 模考中心 + 错题本 + 模考记录 ================= */
+var EKEY="cet4_exam_v1";
+function examLoad(){ try{return JSON.parse(localStorage.getItem(EKEY))||[]}catch(e){return[]} }
+function examSave(a){ try{localStorage.setItem(EKEY,JSON.stringify(a))}catch(e){} }
+var exam=null, examTimer=null;
+function examMods(){ return QZBANK.map(function(b){return {n:b.n,t:b.t,c:b.qs.length}}); }
+
+function renderExamHome(){
+  var box=document.getElementById('examBox'); if(!box)return;
+  var hist=examLoad();
+  var wrongN=ALLQ.filter(function(q){return qz.wrong[q.gid]}).length;
+  var mods=examMods();
+  var mh='';
+  mods.forEach(function(m){
+    mh+='<button onclick="startExam('+m.n+',true)" style="border:1px solid var(--border);background:var(--soft);color:var(--primary);padding:8px 12px;border-radius:9px;font-size:13px;cursor:pointer;font-family:inherit">'+m.n+'. '+esc(m.t.slice(0,8))+'（'+m.c+'）</button>';
+  });
+  box.innerHTML=
+   '<div class="card" style="background:linear-gradient(135deg,var(--soft),#fff);border:1px solid var(--border)">'
+   +'<div style="font-weight:800;font-size:18px;color:var(--primary)">🎯 模考中心</div>'
+   +'<div style="font-size:13px;color:var(--muted);margin-top:6px;line-height:1.7">把平台题库（'+ALLQ.length+' 题，覆盖词汇/语法/听力/阅读/翻译/写作）按正式节奏计时模考，考完出分项报告与 425 合格线估算。<br><b style="color:var(--fg)">说明：</b>计分为练习估算、非官方等值分；题型为知识点巩固式，与真实套卷题型略有差异。</div>'
+   +'</div>'
+   +'<div class="card"><div style="font-weight:700;font-size:15px;margin-bottom:10px;color:var(--fg)">① 全真综合模考</div>'
+   +'<button onclick="startExam(0,true)" style="width:100%;border:none;background:var(--primary);color:#fff;padding:14px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">开始综合模考（'+ALLQ.length+' 题 · 严格计时 90 分钟）</button></div>'
+   +'<div class="card"><div style="font-weight:700;font-size:15px;margin-bottom:10px;color:var(--fg)">② 分项模考（按模块，每模块 15 分钟）</div><div style="display:flex;gap:8px;flex-wrap:wrap">'+mh+'</div></div>'
+   +'<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px">'
+   +'<button onclick="renderWrongBook()" style="flex:1;min-width:150px;border:1px solid var(--border);background:#fff;color:var(--fg);padding:14px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">📕 错题本（'+wrongN+'）</button>'
+   +'<button onclick="renderExamHistory()" style="flex:1;min-width:150px;border:1px solid var(--border);background:#fff;color:var(--fg);padding:14px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">📊 模考记录（'+hist.length+'）</button>'
+   +'</div>';
+}
+
+function startExam(mod,timed){
+  var list=ALLQ.filter(function(q){return !mod||q.m===mod});
+  if(!list.length){toast('该模块暂无题目');return;}
+  var dur = (timed && mod) ? 15*60 : (timed ? 90*60 : 0);
+  exam={mod:mod,timed:!!timed,dur:dur,list:list.map(function(q){return q.gid}),picks:{},start:Date.now(),pos:0};
+  if(examTimer){clearInterval(examTimer);examTimer=null;}
+  if(exam.timed && exam.dur>0) examTimer=setInterval(examTick,1000);
+  renderExamRun();
+}
+
+function examQ(gid){ for(var i=0;i<ALLQ.length;i++) if(ALLQ[i].gid===gid)return ALLQ[i]; return null; }
+
+function examTick(){
+  if(!exam)return;
+  var left=exam.dur-Math.floor((Date.now()-exam.start)/1000);
+  var t=document.getElementById('examTimer');
+  if(t){ if(left<0)left=0; var mm=Math.floor(left/60),ss=left%60; t.textContent=('0'+mm).slice(-2)+':'+('0'+ss).slice(-2); t.style.color = left<=300?'#dc2626':''; }
+  if(left<=0){ examSubmit(true); }
+}
+
+function renderExamRun(){
+  var box=document.getElementById('examBox'); if(!box||!exam)return;
+  var gid=exam.list[exam.pos]; var q=examQ(gid);
+  var total=exam.list.length; var cur=exam.pos+1;
+  var opts=q.o.map(function(t,i){
+    var L='ABCD'[i];
+    var sel=exam.picks[gid]===L;
+    var st=sel?'background:var(--primary);color:#fff;border-color:var(--primary)':'';
+    return '<div class="qz-opt" style="'+st+'" onclick="examPick(\''+gid+'\',\''+L+'\')"><b>'+L+'.</b> '+esc(t)+'</div>';
+  }).join('');
+  var dots='';
+  exam.list.forEach(function(g,i){
+    var pk=exam.picks[g]?'border:1px solid var(--primary)':'';
+    dots+='<span onclick="examJump('+i+')" style="display:inline-block;width:18px;height:18px;line-height:18px;text-align:center;border-radius:50%;font-size:11px;cursor:pointer;margin:2px;'+(i===exam.pos?'background:var(--primary);color:#fff':'background:var(--soft);color:var(--muted)')+pk+'">'+(i+1)+'</span>';
+  });
+  var left=exam.dur-Math.floor((Date.now()-exam.start)/1000); if(left<0)left=0;
+  var mm=Math.floor(left/60),ss=left%60;
+  box.innerHTML=
+   '<div class="card">'
+   +'<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">'
+   +'<span class="prog-txt">第 '+cur+' / '+total+' 题 · 模块 '+q.m+(q.mt?' · '+esc(q.mt):'')+'</span>'
+   +(exam.timed?'<span id="examTimer" style="font-weight:800;font-size:18px;font-variant-numeric:tabular-nums">'+('0'+mm).slice(-2)+':'+('0'+ss).slice(-2)+'</span>':'<span class="prog-txt">自由练习（不计时）</span>')
+   +'</div>'
+   +'<div class="progbar" style="margin-top:10px"><i style="width:'+(cur/total*100)+'%"></i></div>'
+   +'<div style="font-size:15px;font-weight:700;line-height:1.8;margin-top:12px">'+esc(q.q)+'</div>'
+   +'<div style="margin-top:12px">'+opts+'</div>'
+   +'<div style="display:flex;justify-content:space-between;margin-top:14px">'
+   +'<button onclick="examPrev()" '+(exam.pos===0?'disabled style="opacity:.4;cursor:not-allowed"':'')+' style="border:1px solid var(--border);background:#fff;color:var(--fg);padding:9px 18px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit">上一题</button>'
+   +'<button onclick="examSubmit(false)" style="border:none;background:var(--primary);color:#fff;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">交卷</button>'
+   +'<button onclick="examNext()" '+(exam.pos>=total-1?'disabled style="opacity:.4;cursor:not-allowed"':'')+' style="border:1px solid var(--border);background:#fff;color:var(--fg);padding:9px 18px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit">下一题</button>'
+   +'</div>'
+   +'<div style="margin-top:14px;padding-top:10px;border-top:1px dashed var(--border);font-size:12px;color:var(--muted)">答题卡（点数字跳题，已答高亮）</div>'
+   +'<div style="margin-top:6px">'+dots+'</div>'
+   +'</div>';
+}
+function examPick(gid,L){ if(!exam)return; exam.picks[gid]=L; renderExamRun(); }
+function examPrev(){ if(exam&&exam.pos>0){exam.pos--;renderExamRun();} }
+function examNext(){ if(exam&&exam.pos<exam.list.length-1){exam.pos++;renderExamRun();} }
+function examJump(i){ if(exam){exam.pos=i;renderExamRun();} }
+
+function examSubmit(auto){
+  if(!exam)return;
+  if(examTimer){clearInterval(examTimer);examTimer=null;}
+  var total=exam.list.length, correct=0;
+  var per={};
+  exam.list.forEach(function(gid){
+    var q=examQ(gid); var m=q.m; if(!per[m])per[m]={n:0,c:0,mt:q.mt};
+    per[m].n++;
+    var pick=exam.picks[gid];
+    if(pick!==undefined) qz.done[gid]=pick;
+    if(pick===q.a){correct++;per[m].c++;}
+    else { qz.wrong[gid]=1; }
+  });
+  qzSave();
+  var used=Math.floor((Date.now()-exam.start)/1000);
+  if(used>exam.dur)used=exam.dur;
+  var rec={t:new Date().toISOString(),total:total,correct:correct,per:per,used:used,dur:exam.dur,mod:exam.mod};
+  var hist=examLoad(); hist.unshift(rec); if(hist.length>20)hist=hist.slice(0,20); examSave(hist);
+  renderExamReport(rec, auto);
+  exam=null;
+}
+
+function renderExamReport(rec, auto){
+  var box=document.getElementById('examBox'); if(!box)return;
+  var acc=Math.round(rec.correct/rec.total*100);
+  var est=Math.round(rec.correct/rec.total*710);
+  var pass = est>=425;
+  var perRows='';
+  Object.keys(rec.per).sort(function(a,b){return a-b}).forEach(function(m){
+    var p=rec.per[m];
+    perRows+='<tr><td style="padding:6px 8px;border-bottom:1px solid var(--border)">'+m+'. '+esc(p.mt||'')+'</td>'
+      +'<td style="padding:6px 8px;border-bottom:1px solid var(--border);text-align:center">'+p.c+'/'+p.n+'</td>'
+      +'<td style="padding:6px 8px;border-bottom:1px solid var(--border);text-align:center">'+(p.n?Math.round(p.c/p.n*100):0)+'%</td></tr>';
+  });
+  box.innerHTML=
+   '<div class="card" style="text-align:center;background:'+(pass?'linear-gradient(135deg,#ecfdf5,#fff)':'linear-gradient(135deg,#fff7ed,#fff)')+';border:1px solid var(--border)">'
+   +'<div style="font-size:13px;color:var(--muted)">'+(auto?'⏰ 时间到，已自动交卷':'✅ 交卷完成')+'</div>'
+   +'<div style="font-size:40px;font-weight:800;color:var(--primary);margin:6px 0">'+rec.correct+'<span style="font-size:18px;color:var(--muted)"> / '+rec.total+'</span></div>'
+   +'<div style="font-size:14px;color:var(--fg)">正确率 '+acc+'% · 用时 '+Math.floor(rec.used/60)+' 分 '+(rec.used%60)+' 秒</div>'
+   +'<div style="margin-top:12px;padding:12px;border-radius:10px;background:#fff;border:1px solid var(--border)">'
+   +'<div style="font-size:13px;color:var(--muted)">预估总分（练习估算，满分 710，合格线 425）</div>'
+   +'<div style="font-size:30px;font-weight:800;color:'+(pass?'#16a34a':'#dc2626')+'">'+est+'</div>'
+   +'<div style="font-size:13px;font-weight:700;color:'+(pass?'#16a34a':'#dc2626')+'">'+(pass?'🎉 达合格线':'未达合格线，继续加油')+'</div>'
+   +'</div>'
+   +'<div style="font-size:11.5px;color:var(--muted);margin-top:8px">* 该估分为按正确率线性折算的练习参考，非官方等值分；题型为知识点巩固式。</div>'
+   +'</div>'
+   +'<div class="card"><div style="font-weight:700;font-size:15px;margin-bottom:8px;color:var(--fg)">分项正确率</div>'
+   +'<table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="color:var(--muted)"><th style="padding:6px 8px;text-align:left">模块</th><th style="padding:6px 8px;text-align:center">正确</th><th style="padding:6px 8px;text-align:center">正确率</th></tr></thead><tbody>'+perRows+'</tbody></table></div>'
+   +'<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px">'
+   +'<button onclick="startExam('+rec.mod+',true)" style="flex:1;min-width:140px;border:none;background:var(--primary);color:#fff;padding:13px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">再来一次</button>'
+   +'<button onclick="renderWrongBook()" style="flex:1;min-width:140px;border:1px solid var(--border);background:#fff;color:var(--fg);padding:13px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">查看错题本</button>'
+   +'<button onclick="renderExamHome()" style="flex:1;min-width:140px;border:1px solid var(--border);background:#fff;color:var(--fg);padding:13px;border-radius:10px;font-size:14px;cursor:pointer;font-family:inherit">返回模考中心</button>'
+   +'</div>';
+}
+
+function renderWrongBook(){
+  var box=document.getElementById('examBox'); if(!box)return;
+  var wrong=ALLQ.filter(function(q){return qz.wrong[q.gid]});
+  var h='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div style="font-weight:800;font-size:16px;color:var(--fg)">📕 错题本（'+wrong.length+'）</div>';
+  if(wrong.length) h+='<button onclick="if(confirm(\'确定清空错题本吗？\')){qz.wrong={};qzSave();renderWrongBook();toast(\'已清空\')}" style="border:1px solid var(--border);background:#fff;color:#dc2626;padding:7px 12px;border-radius:8px;font-size:12.5px;cursor:pointer;font-family:inherit">清空</button>';
+  h+='</div>';
+  if(!wrong.length){ h+='<div style="text-align:center;padding:24px;color:var(--muted);font-size:14px">暂无错题，太棒了！去模考中心练一套吧 🎯</div></div>'; box.innerHTML=h; return; }
+  var groups={};
+  wrong.forEach(function(q){ (groups[q.m]=groups[q.m]||[]).push(q); });
+  Object.keys(groups).sort(function(a,b){return a-b}).forEach(function(m){
+    h+='<div style="font-weight:700;font-size:13.5px;margin:12px 0 6px;color:var(--primary)">模块 '+m+'</div>';
+    groups[m].forEach(function(q){
+      h+='<div style="border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:var(--soft)">'
+        +'<div style="font-size:14px;font-weight:600;line-height:1.7;color:var(--fg)">'+esc(q.q)+'</div>'
+        +'<div style="font-size:12.5px;color:var(--muted);margin-top:6px">你的答案：'+(qz.done[q.gid]||'未答')+'　|　正确答案：<b style="color:#16a34a">'+q.a+'</b></div>'
+        +'<div style="font-size:12.5px;line-height:1.6;color:var(--fg);margin-top:6px;background:#fff;padding:6px 8px;border-radius:6px">'+esc(q.ex||'（暂无解析）')+'</div>'
+        +'</div>';
+    });
+  });
+  h+='<button onclick="renderExamHome()" style="margin-top:8px;width:100%;border:1px solid var(--border);background:#fff;color:var(--fg);padding:12px;border-radius:10px;font-size:14px;cursor:pointer;font-family:inherit">返回模考中心</button></div>';
+  box.innerHTML=h;
+}
+
+function renderExamHistory(){
+  var box=document.getElementById('examBox'); if(!box)return;
+  var hist=examLoad();
+  var h='<div class="card"><div style="font-weight:800;font-size:16px;color:var(--fg);margin-bottom:8px">📊 模考记录（'+hist.length+'）</div>';
+  if(!hist.length){ h+='<div style="text-align:center;padding:24px;color:var(--muted);font-size:14px">还没有模考记录，去考一套吧 🎯</div></div>'; box.innerHTML=h; return; }
+  h+='<table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="color:var(--muted)"><th style="padding:6px 8px;text-align:left">日期</th><th style="padding:6px 8px;text-align:center">正确</th><th style="padding:6px 8px;text-align:center">预估分</th><th style="padding:6px 8px;text-align:center">用时</th></tr></thead><tbody>';
+  hist.forEach(function(r){
+    var est=Math.round(r.correct/r.total*710);
+    var d=new Date(r.t); var ds=(d.getMonth()+1)+'/'+d.getDate()+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
+    h+='<tr><td style="padding:6px 8px;border-bottom:1px solid var(--border)">'+ds+(r.mod?(' · 模块'+r.mod):' · 综合')+'</td>'
+      +'<td style="padding:6px 8px;border-bottom:1px solid var(--border);text-align:center">'+r.correct+'/'+r.total+'</td>'
+      +'<td style="padding:6px 8px;border-bottom:1px solid var(--border);text-align:center;font-weight:700;color:'+(est>=425?'#16a34a':'#dc2626')+'">'+est+'</td>'
+      +'<td style="padding:6px 8px;border-bottom:1px solid var(--border);text-align:center">'+Math.floor(r.used/60)+'′'+(r.used%60)+'″</td></tr>';
+  });
+  h+='</tbody></table><button onclick="renderExamHome()" style="margin-top:10px;width:100%;border:1px solid var(--border);background:#fff;color:var(--fg);padding:12px;border-radius:10px;font-size:14px;cursor:pointer;font-family:inherit">返回模考中心</button></div>';
+  box.innerHTML=h;
 }
 
 </script>
